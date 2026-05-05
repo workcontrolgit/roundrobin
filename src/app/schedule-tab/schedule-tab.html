@@ -1,0 +1,51 @@
+<div style="max-width:500px; margin:0 auto;">
+  <h2 style="color:#52b788;">Schedule</h2>
+
+  @if (rounds().length === 0) {
+    <p class="text-muted" style="text-align:center;">
+      Add 8–11 players on the Players tab and generate a schedule.
+    </p>
+  }
+
+  @for (round of rounds(); track round.roundNumber; let i = $index) {
+    <mat-card class="round-card" [class]="roundStatus(i)"
+              [attr.aria-label]="'Round ' + round.roundNumber + ', ' + roundStatus(i)">
+      <mat-card-header>
+        <mat-card-title style="font-size:16px; font-weight:bold;">
+          Round {{ round.roundNumber }}
+        </mat-card-title>
+        <span style="flex:1;"></span>
+        <span class="status-badge" [class]="'badge-' + roundStatus(i)">
+          {{ roundStatus(i) === 'active' ? 'NOW' : (roundStatus(i) | uppercase) }}
+        </span>
+      </mat-card-header>
+
+      <mat-card-content style="margin-top:12px;">
+        @for (court of round.courts; track court.courtName) {
+          <div style="margin-bottom:10px;">
+            <div class="text-muted text-small" style="margin-bottom:4px; font-weight:bold;">
+              {{ court.courtName }}
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; font-size:16px; flex-wrap:wrap;">
+              <span>{{ playerName(court.team1[0]) }} &amp; {{ playerName(court.team1[1]) }}</span>
+              @if (court.score) {
+                <span class="score-display">
+                  {{ court.score.team1 }}–{{ court.score.team2 }}
+                </span>
+              } @else {
+                <span class="text-muted">vs</span>
+              }
+              <span>{{ playerName(court.team2[0]) }} &amp; {{ playerName(court.team2[1]) }}</span>
+            </div>
+          </div>
+        }
+
+        @if (round.sittingOut.length > 0) {
+          <div class="text-muted text-small" style="margin-top:6px;">
+            Sitting out: {{ sittingOutNames(round.sittingOut) }}
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
