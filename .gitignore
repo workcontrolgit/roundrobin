@@ -43,5 +43,14 @@ Thumbs.db
 
 # OpenWolf/Superpowers
 .superpowers/
+.wolf
 .wolf/
 .claude/
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
