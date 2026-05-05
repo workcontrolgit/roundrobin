@@ -39,6 +39,10 @@ export class SessionService {
     }
   }
 
+  loadSharedSession(session: Session): void {
+    this._activeSession.set(session);
+  }
+
   initSession(date: string): void {
     const existing = this.loadSession(date);
     if (existing) {

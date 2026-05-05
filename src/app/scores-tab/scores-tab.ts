@@ -28,8 +28,10 @@ export class ScoresTab {
   pendingScores: Record<string, ScoreEntry> = {};
 
   constructor() {
+    // Clear pending inputs whenever the active session changes (including after saves).
+    // This prevents stale inputs from one session appearing in another.
     effect(() => {
-      this.sessionService.activeSession(); // track signal
+      this.sessionService.activeSession();
       this.pendingScores = {};
     });
   }

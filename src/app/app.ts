@@ -36,7 +36,7 @@ export class App implements OnInit {
     if (hash) {
       const shared = this.sessionService.decodeSessionFromHash(hash);
       if (shared) {
-        (this.sessionService as any)['_activeSession'].set(shared);
+        this.sessionService.loadSharedSession(shared);
         this.isReadOnly.set(true);
         return;
       }

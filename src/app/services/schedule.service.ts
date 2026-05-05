@@ -5,6 +5,7 @@ import { Player, Round, CourtGame } from '../models/session.models';
 export class ScheduleService {
 
   generateRounds(players: Player[]): Round[] {
+    if (players.length < 8) return [];
     const n = players.length;
     const sitOutsPerRound = n - 8;
     // Target: enough rounds that every player has rotated through sit-outs

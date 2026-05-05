@@ -18,16 +18,22 @@ export class ShareDialog implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { url: string }) {}
 
   async ngOnInit(): Promise<void> {
-    await QRCode.toCanvas(this.qrCanvas.nativeElement, this.data.url, {
-      width: 256,
-      color: { dark: '#52b788', light: '#1e1e2e' },
-    });
+    try {
+      await QRCode.toCanvas(this.qrCanvas.nativeElement, this.data.url, {
+        width: 256,
+        color: { dark: '#52b788', light: '#1e1e2e' },
+      });
+    } catch {
+      // QR generation failed (e.g., URL too long) — canvas remains blank
+    }
   }
 
   copyUrl(): void {
     navigator.clipboard.writeText(this.data.url).then(() => {
       this.copied = true;
       setTimeout(() => (this.copied = false), 2000);
+    }).catch(() => {
+      // Clipboard unavailable — user can copy URL manually from the text below
     });
   }
 }
