@@ -9,9 +9,10 @@
   </div>
 
   <mat-button-toggle-group [value]="sortBy()" (change)="sortBy.set($event.value)"
+                           aria-label="Sort leaderboard by"
                            style="margin-bottom:16px; width:100%;">
-    <mat-button-toggle value="wins" style="flex:1;">By Wins</mat-button-toggle>
-    <mat-button-toggle value="points" style="flex:1;">By Points</mat-button-toggle>
+    <mat-button-toggle value="wins" style="flex:1;">Sort by Wins</mat-button-toggle>
+    <mat-button-toggle value="points" style="flex:1;">Sort by Points</mat-button-toggle>
   </mat-button-toggle-group>
 
   @if (stats().length === 0) {

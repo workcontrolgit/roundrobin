@@ -16,8 +16,8 @@ import { ShareDialog } from '../share-dialog/share-dialog';
 export class LeaderboardTab {
   @Input() readOnly = false;
 
-  readonly sessionService = inject(SessionService);
-  readonly dialog = inject(MatDialog);
+  private readonly sessionService = inject(SessionService);
+  private readonly dialog = inject(MatDialog);
 
   sortBy = signal<'wins' | 'points'>('wins');
 

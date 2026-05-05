@@ -130,12 +130,23 @@ export class SessionService {
   }
 
   encodeSessionToHash(session: Session): string {
-    return btoa(JSON.stringify(session));
+    const json = JSON.stringify(session);
+    // Use TextEncoder for UTF-8 safe encoding (handles non-Latin1 player names)
+    const bytes = new TextEncoder().encode(json);
+    let binary = '';
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
   }
 
   decodeSessionFromHash(hash: string): Session | null {
     try {
-      return JSON.parse(atob(hash)) as Session;
+      const binary = atob(hash);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const json = new TextDecoder().decode(bytes);
+      return JSON.parse(json) as Session;
     } catch {
       return null;
     }
