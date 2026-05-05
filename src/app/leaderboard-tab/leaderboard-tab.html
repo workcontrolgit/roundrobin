@@ -1,0 +1,46 @@
+<div style="max-width:500px; margin:0 auto;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+    <h2 style="margin:0; color:#52b788;">Leaderboard</h2>
+    @if (!readOnly) {
+      <button mat-stroked-button color="primary" (click)="openShare()">
+        Share QR
+      </button>
+    }
+  </div>
+
+  <mat-button-toggle-group [value]="sortBy()" (change)="sortBy.set($event.value)"
+                           style="margin-bottom:16px; width:100%;">
+    <mat-button-toggle value="wins" style="flex:1;">By Wins</mat-button-toggle>
+    <mat-button-toggle value="points" style="flex:1;">By Points</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  @if (stats().length === 0) {
+    <p class="text-muted" style="text-align:center;">No scores recorded yet.</p>
+  }
+
+  @for (entry of stats(); track entry.player.id; let i = $index) {
+    <mat-card class="round-card" style="margin-bottom:8px;" role="row"
+              [attr.aria-label]="'Rank ' + (i+1) + ': ' + entry.player.name + ', ' + entry.wins + ' wins, ' + entry.totalPoints + ' points'">
+      <mat-card-content style="padding:12px !important;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:22px; width:32px; text-align:center;" aria-hidden="true">
+            {{ medal(i) || (i + 1) }}
+          </span>
+          <div style="flex:1;">
+            <div class="player-name">{{ entry.player.name }}</div>
+            <div class="player-stat text-muted">{{ entry.wins }} wins · {{ entry.totalPoints }} pts · {{ entry.gamesPlayed }} games</div>
+          </div>
+          <span class="status-badge badge-completed">
+            {{ sortBy() === 'wins' ? entry.wins + 'W' : entry.totalPoints + 'pts' }}
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!readOnly) {
+    <button mat-stroked-button color="warn" style="width:100%; margin-top:24px;" (click)="resetSession()">
+      Reset Session
+    </button>
+  }
+</div>

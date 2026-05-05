@@ -1,3 +1,55 @@
-import { Component, Input } from '@angular/core';
-@Component({ selector: 'app-leaderboard-tab', standalone: true, template: '<p style="color:#cdd6f4">Leaderboard tab coming soon</p>' })
-export class LeaderboardTab { @Input() readOnly = false; }
+import { Component, Input, inject, computed, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { SessionService } from '../services/session.service';
+import { ShareDialog } from '../share-dialog/share-dialog';
+
+@Component({
+  selector: 'app-leaderboard-tab',
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatDialogModule],
+  templateUrl: './leaderboard-tab.html',
+})
+export class LeaderboardTab {
+  @Input() readOnly = false;
+
+  readonly sessionService = inject(SessionService);
+  readonly dialog = inject(MatDialog);
+
+  sortBy = signal<'wins' | 'points'>('wins');
+
+  readonly stats = computed(() => {
+    const raw = this.sessionService.getPlayerStats();
+    const by = this.sortBy();
+    return [...raw].sort((a, b) =>
+      by === 'wins'
+        ? b.wins !== a.wins ? b.wins - a.wins : b.totalPoints - a.totalPoints
+        : b.totalPoints !== a.totalPoints ? b.totalPoints - a.totalPoints : b.wins - a.wins
+    );
+  });
+
+  medal(index: number): string {
+    return ['🥇', '🥈', '🥉'][index] ?? '';
+  }
+
+  resetSession(): void {
+    const ok = confirm('Reset this session? All players, schedule, and scores will be cleared.');
+    if (!ok) return;
+    const date = this.sessionService.activeSession()?.date;
+    if (date) {
+      this.sessionService.clearSession(date);
+      this.sessionService.initSession(date);
+    }
+  }
+
+  openShare(): void {
+    const session = this.sessionService.activeSession();
+    if (!session) return;
+    const encoded = this.sessionService.encodeSessionToHash(session);
+    const url = `${window.location.origin}${window.location.pathname}#${encoded}`;
+    this.dialog.open(ShareDialog, { data: { url }, width: '320px' });
+  }
+}
