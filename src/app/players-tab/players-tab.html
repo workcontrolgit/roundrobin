@@ -1,0 +1,54 @@
+<div style="max-width:500px; margin:0 auto;">
+
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+    <h2 style="margin:0; color:#52b788;">Players</h2>
+    <span class="status-badge" [class]="players().length >= 8 ? 'badge-completed' : 'badge-upcoming'">
+      {{ players().length }} / 11
+    </span>
+  </div>
+
+  @if (!readOnly) {
+    <div style="display:flex; gap:8px; margin-bottom:16px; align-items:flex-start;">
+      <mat-form-field appearance="outline" style="flex:1;">
+        <mat-label>Player name</mat-label>
+        <input matInput [(ngModel)]="newName" (keydown)="onKeydown($event)" maxlength="30" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="addPlayer()" [disabled]="!canAdd()"
+              style="margin-top:4px;">
+        Add
+      </button>
+    </div>
+  }
+
+  @if (players().length === 0) {
+    <p class="text-muted" style="text-align:center;">Add 8–11 players to get started.</p>
+  }
+
+  <mat-list>
+    @for (player of players(); track player.id; let i = $index) {
+      <mat-list-item style="background:#2a2a3e; border-radius:8px; margin-bottom:6px;">
+        <span matListItemTitle style="font-size:18px;">{{ i + 1 }}. {{ player.name }}</span>
+        @if (!readOnly) {
+          <button matListItemMeta mat-icon-button color="warn" (click)="removePlayer(player.id)"
+                  [attr.aria-label]="'Remove ' + player.name">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-list-item>
+    }
+  </mat-list>
+
+  @if (!readOnly && canGenerate()) {
+    <button mat-raised-button color="primary" style="width:100%; margin-top:16px;"
+            (click)="generateSchedule()">
+      Generate Schedule ({{ players().length }} players · 2 courts)
+    </button>
+  }
+
+  @if (!readOnly && players().length > 0 && players().length < 8) {
+    <p class="text-muted" style="text-align:center; margin-top:8px;">
+      Add {{ 8 - players().length }} more player(s) to generate schedule
+    </p>
+  }
+
+</div>
