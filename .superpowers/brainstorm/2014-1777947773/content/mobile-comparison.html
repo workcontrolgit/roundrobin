@@ -1,0 +1,94 @@
+<h2>Mobile Experience Comparison</h2>
+<p class="subtitle">How each approach feels on a phone at the court — tap to select your preference</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:16px;display:flex;justify-content:center">
+      <div style="width:160px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4)">
+        <div style="background:#2d6a4f;color:#fff;padding:10px;font-size:11px;font-weight:bold;text-align:center">🏓 Pickleball Round Robin</div>
+        <div style="display:flex;border-bottom:2px solid #eee">
+          <div style="flex:1;padding:7px 2px;font-size:9px;text-align:center;color:#888">Players</div>
+          <div style="flex:1;padding:7px 2px;font-size:9px;text-align:center;color:#2d6a4f;border-bottom:2px solid #2d6a4f;margin-bottom:-2px;font-weight:bold">Schedule</div>
+          <div style="flex:1;padding:7px 2px;font-size:9px;text-align:center;color:#888">Scores</div>
+          <div style="flex:1;padding:7px 2px;font-size:9px;text-align:center;color:#888">Results</div>
+        </div>
+        <div style="padding:10px">
+          <div style="font-size:9px;font-weight:bold;color:#333;margin-bottom:6px">Court 1 — Round 2</div>
+          <div style="background:#f0faf4;border-radius:6px;padding:6px;margin-bottom:4px;font-size:8px">
+            <div style="color:#2d6a4f;font-weight:bold">NOW PLAYING</div>
+            <div style="color:#333">Alice & Bob</div>
+            <div style="color:#999;font-size:7px">vs</div>
+            <div style="color:#333">Carol & Dan</div>
+          </div>
+          <div style="background:#fafafa;border-radius:6px;padding:6px;font-size:8px;color:#888">
+            <div>Round 3: Eve & Frank vs Grace & Hank</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Tabs</h3>
+      <p>Top tab bar. One tap to switch sections. Works great but 4 tabs can feel cramped on small screens. <strong>Good mobile experience.</strong></p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:16px;display:flex;justify-content:center">
+      <div style="width:160px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4)">
+        <div style="background:#2d6a4f;color:#fff;padding:10px;font-size:11px;font-weight:bold;text-align:center">🏓 Pickleball Round Robin</div>
+        <div style="padding:8px 10px">
+          <div style="display:flex;align-items:center;gap:3px;margin-bottom:8px">
+            <div style="flex:1;height:4px;background:#2d6a4f;border-radius:2px"></div>
+            <div style="flex:1;height:4px;background:#2d6a4f;border-radius:2px"></div>
+            <div style="flex:1;height:4px;background:#ddd;border-radius:2px"></div>
+            <div style="flex:1;height:4px;background:#ddd;border-radius:2px"></div>
+          </div>
+          <div style="font-size:9px;color:#999;margin-bottom:6px">Step 2 of 4: Schedule</div>
+          <div style="font-size:10px;font-weight:bold;color:#333;margin-bottom:8px">Generate Schedule</div>
+          <div style="background:#f0faf4;border-radius:6px;padding:6px;font-size:8px;color:#555;margin-bottom:6px">
+            8 players added ✓<br>Ready to generate!
+          </div>
+          <div style="display:flex;gap:4px">
+            <div style="flex:1;background:#eee;border-radius:4px;padding:5px;font-size:8px;text-align:center;color:#666">Back</div>
+            <div style="flex:1;background:#2d6a4f;border-radius:4px;padding:5px;font-size:8px;text-align:center;color:#fff">Generate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Wizard</h3>
+      <p>Progress bar + Next/Back buttons. Clean and focused but requires extra taps to go back and fix a score. <strong>Decent mobile experience.</strong></p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:16px;display:flex;justify-content:center">
+      <div style="width:160px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4)">
+        <div style="background:#2d6a4f;color:#fff;padding:10px;font-size:11px;font-weight:bold;text-align:center">🏓 Pickleball Round Robin</div>
+        <div style="padding:8px 10px;overflow:hidden">
+          <div style="font-size:8px;font-weight:bold;color:#2d6a4f;margin-bottom:4px">PLAYERS (8)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:8px">
+            <span style="background:#e8f5e9;border-radius:3px;padding:2px 4px;font-size:7px">Alice</span>
+            <span style="background:#e8f5e9;border-radius:3px;padding:2px 4px;font-size:7px">Bob</span>
+            <span style="background:#e8f5e9;border-radius:3px;padding:2px 4px;font-size:7px">Carol</span>
+            <span style="background:#eee;border-radius:3px;padding:2px 4px;font-size:7px;color:#999">+5</span>
+          </div>
+          <div style="font-size:8px;font-weight:bold;color:#2d6a4f;margin-bottom:4px">SCHEDULE</div>
+          <div style="font-size:7px;color:#555;margin-bottom:2px">R1: Alice+Bob vs Carol+Dan</div>
+          <div style="font-size:7px;color:#555;margin-bottom:6px">R2: Eve+Frank vs Grace+Hank</div>
+          <div style="font-size:8px;font-weight:bold;color:#2d6a4f;margin-bottom:4px">LEADERBOARD</div>
+          <div style="font-size:7px;color:#555">1. Alice — 3W / 33pts</div>
+          <div style="font-size:7px;color:#999">↓ scroll for more</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Single Scroll</h3>
+      <p>Everything on one page, scroll down as play progresses. No navigation needed. <strong>Best for quick access at the court.</strong></p>
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:16px;color:#aaa;font-size:13px">All three work on mobile. C is the most thumb-friendly — no nav to tap, just scroll.</p>

@@ -1,0 +1,40 @@
+<h2>How should the app be structured?</h2>
+<p class="subtitle">3 approaches to the overall app flow — pick the one that feels right</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Tabbed Single Page</h3>
+      <p>Four tabs always visible: <strong>Players → Schedule → Scores → Leaderboard</strong>. Jump between tabs freely at any time. Simple and familiar — like a spreadsheet with tabs.</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>Non-linear — jump anywhere</li><li>Easy to revisit players/scores</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Less guided for first-time use</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Guided Wizard / Stepper</h3>
+      <p>Step-by-step flow: <strong>1. Add Players → 2. Generate Schedule → 3. Enter Scores → 4. View Results</strong>. Progress bar at top. "Next" / "Back" buttons.</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>Clear progression, hard to get lost</li><li>Great for first-time users</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>More clicks to go back and fix things</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Single Scrolling Page</h3>
+      <p>Everything on one long page: player list at top, schedule in middle, live leaderboard at the bottom. Scroll down as the session progresses.</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>All info visible, no navigation</li><li>Great on phones/tablets at the court</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Can feel long with 12 players + many rounds</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>

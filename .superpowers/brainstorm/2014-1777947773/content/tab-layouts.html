@@ -1,0 +1,176 @@
+<h2>Design — Section 2: Screen Layouts</h2>
+<p class="subtitle">Mockups of each tab. Click a tab below to preview it.</p>
+
+<div style="max-width:400px;margin:0 auto">
+
+  <!-- Tab switcher -->
+  <div style="display:flex;border-bottom:2px solid #333;margin-bottom:16px" id="tabs">
+    <button onclick="showTab('players')" id="tab-players" style="flex:1;padding:10px 4px;font-size:12px;border:none;background:none;color:#52b788;border-bottom:2px solid #52b788;margin-bottom:-2px;cursor:pointer;font-weight:bold">Players</button>
+    <button onclick="showTab('schedule')" id="tab-schedule" style="flex:1;padding:10px 4px;font-size:12px;border:none;background:none;color:#aaa;cursor:pointer">Schedule</button>
+    <button onclick="showTab('scores')" id="tab-scores" style="flex:1;padding:10px 4px;font-size:12px;border:none;background:none;color:#aaa;cursor:pointer">Scores</button>
+    <button onclick="showTab('leaderboard')" id="tab-leaderboard" style="flex:1;padding:10px 4px;font-size:12px;border:none;background:none;color:#aaa;cursor:pointer">Leaderboard</button>
+  </div>
+
+  <!-- Players Tab -->
+  <div id="screen-players">
+    <div style="background:#1e1e2e;border-radius:10px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:13px;font-weight:bold;color:#cdd6f4">Court 1 — Players</span>
+        <span style="font-size:11px;color:#a6e3a1;background:#1a3a2a;padding:3px 8px;border-radius:12px">8 / 12</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input placeholder="Enter player name" style="flex:1;background:#2a2a3e;border:1px solid #444;border-radius:6px;padding:8px;color:#cdd6f4;font-size:12px">
+        <button style="background:#52b788;border:none;border-radius:6px;padding:8px 14px;color:#1a1a2e;font-weight:bold;font-size:12px;cursor:pointer">Add</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#2a2a3e;border-radius:6px;padding:8px 12px">
+          <span style="font-size:12px;color:#cdd6f4">1. Alice</span>
+          <span style="color:#f38ba8;font-size:16px;cursor:pointer">×</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#2a2a3e;border-radius:6px;padding:8px 12px">
+          <span style="font-size:12px;color:#cdd6f4">2. Bob</span>
+          <span style="color:#f38ba8;font-size:16px;cursor:pointer">×</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#2a2a3e;border-radius:6px;padding:8px 12px">
+          <span style="font-size:12px;color:#cdd6f4">3. Carol</span>
+          <span style="color:#f38ba8;font-size:16px;cursor:pointer">×</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#2a2a3e;border-radius:6px;padding:8px 12px">
+          <span style="font-size:12px;color:#cdd6f4">4. Dan</span>
+          <span style="color:#f38ba8;font-size:16px;cursor:pointer">×</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#2a2a3e;border-radius:6px;padding:8px 12px;opacity:0.5">
+          <span style="font-size:12px;color:#cdd6f4">5. Eve</span>
+          <span style="color:#f38ba8;font-size:16px;cursor:pointer">×</span>
+        </div>
+        <div style="text-align:center;padding:6px;font-size:11px;color:#6c7086">+ 3 more players</div>
+      </div>
+      <button style="width:100%;margin-top:14px;background:#52b788;border:none;border-radius:8px;padding:12px;color:#1a1a2e;font-weight:bold;font-size:13px;cursor:pointer">Generate Schedule →</button>
+    </div>
+  </div>
+
+  <!-- Schedule Tab -->
+  <div id="screen-schedule" style="display:none">
+    <div style="background:#1e1e2e;border-radius:10px;padding:16px">
+      <div style="font-size:13px;font-weight:bold;color:#cdd6f4;margin-bottom:12px">Court 1 — Schedule</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:#2a2a3e;border-radius:8px;padding:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:11px;color:#a6e3a1;font-weight:bold">ROUND 1 ✓</span>
+            <span style="font-size:11px;color:#6c7086">11 – 8</span>
+          </div>
+          <div style="font-size:12px;color:#cdd6f4">Alice & Bob <span style="color:#6c7086">vs</span> Carol & Dan</div>
+          <div style="font-size:10px;color:#6c7086;margin-top:4px">Sitting out: Eve, Frank, Grace, Hank</div>
+        </div>
+        <div style="background:#2a2a3e;border-radius:8px;padding:12px;border:1px solid #52b788">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:11px;color:#89b4fa;font-weight:bold">ROUND 2 — NOW</span>
+          </div>
+          <div style="font-size:12px;color:#cdd6f4">Eve & Frank <span style="color:#6c7086">vs</span> Grace & Hank</div>
+          <div style="font-size:10px;color:#6c7086;margin-top:4px">Sitting out: Alice, Bob, Carol, Dan</div>
+        </div>
+        <div style="background:#1a1a2e;border-radius:8px;padding:12px;opacity:0.6">
+          <div style="font-size:11px;color:#6c7086;font-weight:bold;margin-bottom:8px">ROUND 3</div>
+          <div style="font-size:12px;color:#888">Alice & Grace <span style="color:#555">vs</span> Bob & Eve</div>
+          <div style="font-size:10px;color:#555;margin-top:4px">Sitting out: Carol, Dan, Frank, Hank</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scores Tab -->
+  <div id="screen-scores" style="display:none">
+    <div style="background:#1e1e2e;border-radius:10px;padding:16px">
+      <div style="font-size:13px;font-weight:bold;color:#cdd6f4;margin-bottom:12px">Enter Scores</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:#2a2a3e;border-radius:8px;padding:12px">
+          <div style="font-size:11px;color:#6c7086;margin-bottom:8px">ROUND 1 — COMPLETED</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="flex:1;font-size:12px;color:#cdd6f4;text-align:right">Alice & Bob</span>
+            <input value="11" style="width:36px;background:#1a1a2e;border:1px solid #444;border-radius:4px;padding:4px;color:#a6e3a1;font-size:13px;text-align:center">
+            <span style="color:#6c7086;font-size:11px">–</span>
+            <input value="8" style="width:36px;background:#1a1a2e;border:1px solid #444;border-radius:4px;padding:4px;color:#f38ba8;font-size:13px;text-align:center">
+            <span style="flex:1;font-size:12px;color:#cdd6f4">Carol & Dan</span>
+          </div>
+        </div>
+        <div style="background:#2a2a3e;border-radius:8px;padding:12px;border:1px solid #52b788">
+          <div style="font-size:11px;color:#89b4fa;margin-bottom:8px">ROUND 2 — ENTER SCORE</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="flex:1;font-size:12px;color:#cdd6f4;text-align:right">Eve & Frank</span>
+            <input placeholder="0" style="width:36px;background:#1a1a2e;border:1px solid #52b788;border-radius:4px;padding:4px;color:#cdd6f4;font-size:13px;text-align:center">
+            <span style="color:#6c7086;font-size:11px">–</span>
+            <input placeholder="0" style="width:36px;background:#1a1a2e;border:1px solid #52b788;border-radius:4px;padding:4px;color:#cdd6f4;font-size:13px;text-align:center">
+            <span style="flex:1;font-size:12px;color:#cdd6f4">Grace & Hank</span>
+          </div>
+          <button style="width:100%;margin-top:10px;background:#52b788;border:none;border-radius:6px;padding:8px;color:#1a1a2e;font-weight:bold;font-size:12px;cursor:pointer">Save Score</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard Tab -->
+  <div id="screen-leaderboard" style="display:none">
+    <div style="background:#1e1e2e;border-radius:10px;padding:16px">
+      <div style="font-size:13px;font-weight:bold;color:#cdd6f4;margin-bottom:12px">Court 1 — Leaderboard</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button style="flex:1;background:#52b788;border:none;border-radius:6px;padding:7px;color:#1a1a2e;font-size:11px;font-weight:bold;cursor:pointer">By Wins</button>
+        <button style="flex:1;background:#2a2a3e;border:1px solid #444;border-radius:6px;padding:7px;color:#aaa;font-size:11px;cursor:pointer">By Points</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:10px;background:#2a2a3e;border-radius:8px;padding:10px 12px">
+          <span style="font-size:18px">🥇</span>
+          <div style="flex:1">
+            <div style="font-size:13px;color:#cdd6f4;font-weight:bold">Alice</div>
+            <div style="font-size:10px;color:#6c7086">3 wins · 88 pts</div>
+          </div>
+          <span style="font-size:11px;color:#a6e3a1;background:#1a3a2a;padding:3px 8px;border-radius:10px">3W</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:#2a2a3e;border-radius:8px;padding:10px 12px">
+          <span style="font-size:18px">🥈</span>
+          <div style="flex:1">
+            <div style="font-size:13px;color:#cdd6f4;font-weight:bold">Bob</div>
+            <div style="font-size:10px;color:#6c7086">2 wins · 76 pts</div>
+          </div>
+          <span style="font-size:11px;color:#a6e3a1;background:#1a3a2a;padding:3px 8px;border-radius:10px">2W</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:#2a2a3e;border-radius:8px;padding:10px 12px">
+          <span style="font-size:18px">🥉</span>
+          <div style="flex:1">
+            <div style="font-size:13px;color:#cdd6f4;font-weight:bold">Carol</div>
+            <div style="font-size:10px;color:#6c7086">2 wins · 71 pts</div>
+          </div>
+          <span style="font-size:11px;color:#a6e3a1;background:#1a3a2a;padding:3px 8px;border-radius:10px">2W</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:#1a1a2e;border-radius:8px;padding:10px 12px;opacity:0.7">
+          <span style="font-size:14px;color:#6c7086;width:28px;text-align:center">4</span>
+          <div style="flex:1">
+            <div style="font-size:13px;color:#888">Dan</div>
+            <div style="font-size:10px;color:#555">1 win · 65 pts</div>
+          </div>
+          <span style="font-size:11px;color:#6c7086;background:#2a2a3e;padding:3px 8px;border-radius:10px">1W</span>
+        </div>
+      </div>
+      <button style="width:100%;margin-top:14px;background:#f38ba8;border:none;border-radius:8px;padding:10px;color:#1a1a2e;font-weight:bold;font-size:12px;cursor:pointer">Reset Session</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showTab(name) {
+  ['players','schedule','scores','leaderboard'].forEach(t => {
+    document.getElementById('screen-' + t).style.display = t === name ? 'block' : 'none';
+    const btn = document.getElementById('tab-' + t);
+    if (t === name) {
+      btn.style.color = '#52b788';
+      btn.style.borderBottom = '2px solid #52b788';
+      btn.style.marginBottom = '-2px';
+      btn.style.fontWeight = 'bold';
+    } else {
+      btn.style.color = '#aaa';
+      btn.style.borderBottom = 'none';
+      btn.style.fontWeight = 'normal';
+    }
+  });
+}
+</script>
