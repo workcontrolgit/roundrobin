@@ -24,16 +24,16 @@ export class PlayersTab {
   readonly sessionService = inject(SessionService);
   readonly scheduleService = inject(ScheduleService);
 
-  newName = '';
+  newName = signal('');
 
   readonly players = computed(() => this.sessionService.activeSession()?.players ?? []);
-  readonly canAdd = computed(() => this.players().length < 11 && this.newName.trim().length > 0);
+  readonly canAdd = computed(() => this.players().length < 11 && this.newName().trim().length > 0);
   readonly canGenerate = computed(() => this.players().length >= 8);
 
   addPlayer(): void {
     if (!this.canAdd()) return;
-    this.sessionService.addPlayer(this.newName);
-    this.newName = '';
+    this.sessionService.addPlayer(this.newName());
+    this.newName.set('');
   }
 
   removePlayer(id: string): void {

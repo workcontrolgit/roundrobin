@@ -11,7 +11,7 @@
     <div style="display:flex; gap:8px; margin-bottom:16px; align-items:flex-start;">
       <mat-form-field appearance="outline" style="flex:1;">
         <mat-label>Player name</mat-label>
-        <input matInput [(ngModel)]="newName" (keydown)="onKeydown($event)" maxlength="30" />
+        <input matInput [ngModel]="newName()" (ngModelChange)="newName.set($event)" (keydown)="onKeydown($event)" maxlength="30" />
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="addPlayer()" [disabled]="!canAdd()"
               style="margin-top:4px;">
