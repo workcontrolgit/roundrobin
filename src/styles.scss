@@ -1,39 +1,109 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
 html {
   @include mat.theme((
     color: (
-      primary: mat.$azure-palette,
+      primary: mat.$green-palette,
       tertiary: mat.$blue-palette,
+      theme-type: dark,
     ),
     typography: Roboto,
     density: 0,
   ));
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
+html, body {
+  height: 100%;
   margin: 0;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  font-family: Roboto, sans-serif;
+  font-size: 18px;
 }
-/* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  color-scheme: dark;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  font: 18px/1.5 Roboto, sans-serif;
+}
+
+// 508: all buttons/interactive elements min 48x48px touch target
+button, .mat-mdc-button, .mat-mdc-raised-button,
+.mat-mdc-stroked-button, .mat-mdc-icon-button {
+  min-height: 48px !important;
+  min-width: 48px !important;
+}
+
+// 508: tab bar height
+.mat-mdc-tab {
+  min-height: 56px !important;
+  font-size: 16px !important;
+}
+
+.accent-green { color: #52b788; }
+.text-muted   { color: #8a8fa8; }
+.text-small   { font-size: 16px; }
+
+.round-card {
+  background: #2a2a3e !important;
+  margin-bottom: 14px;
+  padding: 4px 0;
+}
+
+.round-card.active {
+  border: 2px solid #52b788 !important;
+}
+
+.round-card.completed {
+  opacity: 0.9;
+}
+
+.round-card.upcoming {
+  opacity: 0.65;
+}
+
+.status-badge {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+
+.badge-completed { background: #1a3a2a; color: #a6e3a1; }
+.badge-active    { background: #1a2a3a; color: #89dcff; }
+.badge-upcoming  { background: #2a2a3e; color: #8a8fa8; }
+
+// 508: score inputs — large, readable
+input[type="number"] {
+  font-size: 20px !important;
+  font-weight: bold !important;
+  min-height: 48px !important;
+  text-align: center;
+}
+
+mat-list-item {
+  min-height: 56px !important;
+}
+
+.leaderboard-row {
+  min-height: 60px;
+  font-size: 18px;
+}
+
+.player-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #cdd6f4;
+}
+
+.player-stat {
+  font-size: 16px;
+  color: #8a8fa8;
+}
+
+.score-display {
+  font-size: 24px;
+  font-weight: bold;
+  color: #a6e3a1;
+}

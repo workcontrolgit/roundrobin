@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+mat-tab-group {
+  ::ng-deep .mat-mdc-tab-body-content {
+    padding: 16px;
+  }
+}
