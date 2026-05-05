@@ -1,4 +1,4 @@
-import { Component, Input, inject, computed } from '@angular/core';
+import { Component, Input, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -26,6 +26,13 @@ export class ScoresTab {
 
   // Per-round-per-court pending score inputs: key = `${roundIndex}-${courtName}`
   pendingScores: Record<string, ScoreEntry> = {};
+
+  constructor() {
+    effect(() => {
+      this.sessionService.activeSession(); // track signal
+      this.pendingScores = {};
+    });
+  }
 
   readonly activeRoundIndex = computed(() => {
     const rounds = this.rounds();
