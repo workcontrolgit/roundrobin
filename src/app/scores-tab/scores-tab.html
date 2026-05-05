@@ -1,0 +1,74 @@
+<div style="max-width:500px; margin:0 auto;">
+  <h2 style="color:#52b788;">Scores</h2>
+
+  @if (rounds().length === 0) {
+    <p class="text-muted" style="text-align:center;">Generate a schedule first.</p>
+  }
+
+  @for (round of rounds(); track round.roundNumber; let ri = $index) {
+    <mat-card class="round-card"
+              [class.active]="ri === activeRoundIndex()"
+              [class.completed]="ri < activeRoundIndex()"
+              [class.upcoming]="ri > activeRoundIndex()">
+      <mat-card-header>
+        <mat-card-title style="font-size:14px;">Round {{ round.roundNumber }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content style="margin-top:12px;">
+        @for (court of round.courts; track court.courtName) {
+          <div style="margin-bottom:14px;">
+            <div class="text-muted text-small" style="margin-bottom:6px;">{{ court.courtName }}</div>
+
+            @if (court.score) {
+              <!-- Completed — show editable score -->
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span style="font-size:13px;">{{ playerName(court.team1[0]) }} &amp; {{ playerName(court.team1[1]) }}</span>
+                <input type="number" min="0"
+                       [ngModel]="court.score.team1"
+                       (ngModelChange)="getPending(ri, court.courtName).team1Score = $event"
+                       style="width:48px; background:#1a1a2e; border:1px solid #444; border-radius:4px; padding:4px; color:#a6e3a1; text-align:center;" />
+                <span class="text-muted">–</span>
+                <input type="number" min="0"
+                       [ngModel]="court.score.team2"
+                       (ngModelChange)="getPending(ri, court.courtName).team2Score = $event"
+                       style="width:48px; background:#1a1a2e; border:1px solid #444; border-radius:4px; padding:4px; color:#f38ba8; text-align:center;" />
+                <span style="font-size:13px;">{{ playerName(court.team2[0]) }} &amp; {{ playerName(court.team2[1]) }}</span>
+                @if (!readOnly) {
+                  <button mat-stroked-button style="font-size:11px; height:28px; line-height:28px;"
+                          (click)="saveScore(ri, court.courtName)">Update</button>
+                }
+              </div>
+            } @else if (ri === activeRoundIndex() && !readOnly) {
+              <!-- Active — score entry -->
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+                <span style="font-size:13px;">{{ playerName(court.team1[0]) }} &amp; {{ playerName(court.team1[1]) }}</span>
+                <input type="number" min="0" placeholder="0"
+                       [ngModel]="getPending(ri, court.courtName).team1Score"
+                       (ngModelChange)="getPending(ri, court.courtName).team1Score = $event"
+                       style="width:48px; background:#1a1a2e; border:1px solid #52b788; border-radius:4px; padding:4px; color:#cdd6f4; text-align:center;" />
+                <span class="text-muted">–</span>
+                <input type="number" min="0" placeholder="0"
+                       [ngModel]="getPending(ri, court.courtName).team2Score"
+                       (ngModelChange)="getPending(ri, court.courtName).team2Score = $event"
+                       style="width:48px; background:#1a1a2e; border:1px solid #52b788; border-radius:4px; padding:4px; color:#cdd6f4; text-align:center;" />
+                <span style="font-size:13px;">{{ playerName(court.team2[0]) }} &amp; {{ playerName(court.team2[1]) }}</span>
+              </div>
+              <button mat-raised-button color="primary" style="width:100%;"
+                      [disabled]="!canSave(ri, court.courtName)"
+                      (click)="saveScore(ri, court.courtName)">
+                Save {{ court.courtName }} Score
+              </button>
+            } @else {
+              <!-- Upcoming -->
+              <div style="font-size:13px; color:#6c7086;">
+                {{ playerName(court.team1[0]) }} &amp; {{ playerName(court.team1[1]) }}
+                vs
+                {{ playerName(court.team2[0]) }} &amp; {{ playerName(court.team2[1]) }}
+              </div>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
