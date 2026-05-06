@@ -3,7 +3,7 @@
 
 import { Page } from '@playwright/test';
 
-export const BASE_URL = 'http://localhost:4200/roundrobin';
+export const BASE_URL = process.env['BASE_URL'] ?? 'http://localhost:4200/roundrobin';
 
 /** Clear localStorage and navigate to a fresh app state */
 export async function freshState(page: Page): Promise<void> {
