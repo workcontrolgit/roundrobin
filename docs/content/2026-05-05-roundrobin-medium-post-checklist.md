@@ -3,9 +3,11 @@
 ## Content Review
 
 - [ ] Confirm the post targets pickleball players and organizers
-- [ ] Confirm the hook emphasizes getting games started faster
+- [ ] Confirm the hook emphasizes faster starts for impromptu sessions
 - [ ] Confirm the post mentions avoiding spreadsheets on a phone
-- [ ] Confirm the tone stays non-technical
+- [ ] Confirm the wording stays focused on phone use, quick setup, and open play
+- [ ] Confirm the tone stays non-technical and practical
+- [ ] Confirm there are no developer or implementation references
 
 ## Medium Formatting Review
 
@@ -14,7 +16,7 @@
 - [ ] Confirm paragraphs are short and readable on mobile
 - [ ] Confirm bullet lists are short and flat
 - [ ] Confirm the live URL is visible as plain text
-- [ ] Confirm the CTA and app link stay clear after paste and preview
+- [ ] Confirm the CTA is direct and the app link stays clear after paste and preview
 
 ## Asset Review
 
