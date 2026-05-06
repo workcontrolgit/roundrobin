@@ -36,3 +36,26 @@ Using the app is straightforward:
 - Use the schedule to keep games moving
 
 That is the whole point. Less setup, less confusion, and more time actually playing.
+
+## Why This Works Better for Casual Sessions
+
+Most pickleball sessions are not run like formal events. People arrive at different times, some players leave early, and the group changes as the session goes.
+
+That is exactly where a simple phone-first tool helps most.
+
+RoundRobin helps you:
+
+- Start games faster
+- Avoid spreadsheet juggling on your phone
+- Reduce confusion when organizing players
+- Keep impromptu sessions moving
+
+If you regularly help coordinate open play, even saving a few minutes at the beginning can make the whole session run more smoothly.
+
+## Try It Before Your Next Session
+
+If you organize pickleball games and want a faster way to get people on the court, you can try RoundRobin here:
+
+https://workcontrolgit.github.io/roundrobin/
+
+Open it on your phone, add the players who showed up, and see how quickly you can get your next impromptu session moving.
