@@ -15,3 +15,24 @@ The hardest part is usually not making the first list. It is keeping that list u
 One player shows up late. Another needs to leave after two games. Someone wants to sit out a round. In a casual group, the lineup changes constantly, and small changes quickly turn into confusion about who should play next.
 
 That is where spreadsheets, whiteboards, and notes apps start to break down. They can hold names, but they do not do much to help one person make quick, fair adjustments without slowing everyone else down.
+
+## A Simpler Way to Get Games Started
+
+RoundRobin is built for one job: helping you get from "who showed up?" to "let's play" faster.
+
+Instead of managing names and matchups by hand, you can add the players who are there and build a round-robin schedule in a few taps.
+
+Then you can use that schedule to keep the session moving.
+
+It is not meant to feel like tournament software. It is meant to feel quick, lightweight, and useful when you are standing at the courts and just want to get people playing.
+
+## How to Use It
+
+Using the app is straightforward:
+
+- Open RoundRobin on your phone
+- Add the players who showed up
+- Create the round-robin schedule
+- Use the schedule to keep games moving
+
+That is the whole point. Less setup, less confusion, and more time actually playing.
