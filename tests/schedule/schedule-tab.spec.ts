@@ -151,6 +151,43 @@ test.describe('Schedule Tab', () => {
     await expect(round1Card.getByText('9–11')).toBeVisible();
   });
 
+  test('2.8 — All Rounds COMPLETED When All Scores Entered', async ({ page }) => {
+    // Precondition: 8 players, schedule generated, all 7 rounds scored
+    await freshState(page);
+    await page.getByRole('tab', { name: 'Players' }).click();
+    await setupSchedule(page);
+
+    // Score all 7 rounds
+    await goToScores(page);
+    for (let round = 0; round < 7; round++) {
+      const c1t1 = page.getByLabel('Court 1 team 1 score').first();
+      const c1t2 = page.getByLabel('Court 1 team 2 score').first();
+      await c1t1.fill('11');
+      await c1t2.fill('7');
+      await page.getByRole('button', { name: 'Save Court 1 Score' }).click();
+
+      const c2t1 = page.getByLabel('Court 2 team 1 score').first();
+      const c2t2 = page.getByLabel('Court 2 team 2 score').first();
+      await c2t1.fill('9');
+      await c2t2.fill('11');
+      await page.getByRole('button', { name: 'Save Court 2 Score' }).click();
+    }
+
+    // Click the Schedule tab
+    await goToSchedule(page);
+
+    // All 7 rounds show COMPLETED badge
+    const cards = page.locator('.round-card');
+    const count = await cards.count();
+    for (let i = 0; i < count; i++) {
+      await expect(cards.nth(i).getByText('COMPLETED')).toBeVisible();
+    }
+
+    // No round shows NOW or UPCOMING
+    await expect(page.getByText('NOW')).not.toBeVisible();
+    await expect(page.getByText('UPCOMING')).not.toBeVisible();
+  });
+
   test('2.9 — Player Names Display Correctly (Not UUIDs)', async ({ page }) => {
     // Precondition: players with recognizable names; schedule generated
     await freshState(page);
