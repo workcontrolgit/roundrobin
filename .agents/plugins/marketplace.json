@@ -1,0 +1,20 @@
+{
+  "name": "roundrobin-local-marketplace",
+  "interface": {
+    "displayName": "RoundRobin Local Marketplace"
+  },
+  "plugins": [
+    {
+      "name": "superpowers",
+      "source": {
+        "source": "local",
+        "path": "./plugins/superpowers"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
