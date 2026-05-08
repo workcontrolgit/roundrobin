@@ -62,7 +62,7 @@ export async function setupSchedule(page: Page, players = EIGHT_PLAYERS): Promis
   page.once('dialog', dialog => dialog.accept());
 }
 
-/** Save scores for both courts of the active round */
+/** Save scores for both courts of the active round using the Save Round button */
 export async function saveRound1Scores(
   page: Page,
   court1: [number, number] = [11, 7],
@@ -70,19 +70,16 @@ export async function saveRound1Scores(
 ): Promise<void> {
   await goToScores(page);
 
-  // Court 1
-  const court1Team1Input = page.getByLabel('Court 1 team 1 score').first();
-  const court1Team2Input = page.getByLabel('Court 1 team 2 score').first();
-  await court1Team1Input.fill(String(court1[0]));
-  await court1Team2Input.fill(String(court1[1]));
-  await page.getByRole('button', { name: 'Save Court 1 Score' }).click();
+  // Fill Court 1
+  await page.getByLabel('Court 1 team 1 score').first().fill(String(court1[0]));
+  await page.getByLabel('Court 1 team 2 score').first().fill(String(court1[1]));
 
-  // Court 2
-  const court2Team1Input = page.getByLabel('Court 2 team 1 score').first();
-  const court2Team2Input = page.getByLabel('Court 2 team 2 score').first();
-  await court2Team1Input.fill(String(court2[0]));
-  await court2Team2Input.fill(String(court2[1]));
-  await page.getByRole('button', { name: 'Save Court 2 Score' }).click();
+  // Fill Court 2
+  await page.getByLabel('Court 2 team 1 score').first().fill(String(court2[0]));
+  await page.getByLabel('Court 2 team 2 score').first().fill(String(court2[1]));
+
+  // Save both courts at once
+  await page.getByRole('button', { name: /Save Round 1/ }).click();
 }
 
 /** Generate a valid share URL by setting up a full session */
