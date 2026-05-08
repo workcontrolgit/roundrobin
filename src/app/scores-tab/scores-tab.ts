@@ -72,4 +72,30 @@ export class ScoresTab {
     this.sessionService.saveScore(roundIndex, courtName, entry.team1Score!, entry.team2Score!);
     delete this.pendingScores[this.entryKey(roundIndex, courtName)];
   }
+
+  courtReady(roundIndex: number, courtName: string): boolean {
+    const entry = this.getPending(roundIndex, courtName);
+    return entry.team1Score != null && entry.team2Score != null &&
+           entry.team1Score >= 0 && entry.team2Score >= 0;
+  }
+
+  courtsReadyCount(roundIndex: number): number {
+    const courts = this.rounds()[roundIndex]?.courts ?? [];
+    return courts.filter(c => this.courtReady(roundIndex, c.courtName)).length;
+  }
+
+  allCourtsReady(roundIndex: number): boolean {
+    const courts = this.rounds()[roundIndex]?.courts ?? [];
+    return courts.length > 0 && this.courtsReadyCount(roundIndex) === courts.length;
+  }
+
+  saveRound(roundIndex: number): void {
+    const courts = this.rounds()[roundIndex]?.courts ?? [];
+    for (const court of courts) {
+      if (this.courtReady(roundIndex, court.courtName)) {
+        const entry = this.getPending(roundIndex, court.courtName);
+        this.sessionService.saveScore(roundIndex, court.courtName, entry.team1Score!, entry.team2Score!);
+      }
+    }
+  }
 }
