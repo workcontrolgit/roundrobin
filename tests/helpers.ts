@@ -62,7 +62,7 @@ export async function setupSchedule(page: Page, players = EIGHT_PLAYERS): Promis
   page.once('dialog', dialog => dialog.accept());
 }
 
-/** Save scores for both courts of the active round using the Save Round button */
+/** Save scores for both courts of the active round via blur auto-save */
 export async function saveRound1Scores(
   page: Page,
   court1: [number, number] = [11, 7],
@@ -70,16 +70,15 @@ export async function saveRound1Scores(
 ): Promise<void> {
   await goToScores(page);
 
-  // Fill Court 1
+  // Court 1: fill both fields, Tab out of team2 to trigger onBlurSave
   await page.getByLabel('Court 1 team 1 score').first().fill(String(court1[0]));
   await page.getByLabel('Court 1 team 2 score').first().fill(String(court1[1]));
+  await page.getByLabel('Court 1 team 2 score').first().press('Tab');
 
-  // Fill Court 2
+  // Court 2: fill both fields, Tab out of team2 to trigger onBlurSave
   await page.getByLabel('Court 2 team 1 score').first().fill(String(court2[0]));
   await page.getByLabel('Court 2 team 2 score').first().fill(String(court2[1]));
-
-  // Save both courts at once
-  await page.getByRole('button', { name: /Save Round 1/ }).click();
+  await page.getByLabel('Court 2 team 2 score').first().press('Tab');
 }
 
 /** Generate a valid share URL by setting up a full session */
@@ -91,5 +90,9 @@ export async function generateShareUrl(page: Page): Promise<string> {
   await page.getByRole('button', { name: 'Share QR' }).click();
   const urlText = await page.locator('mat-dialog-content p').textContent();
   await page.getByRole('button', { name: 'Close' }).click();
+  // Navigate away so subsequent page.goto(shareUrl) causes a full page load.
+  // Without this, navigating from BASE_URL to BASE_URL#hash is a hash-only
+  // navigation that does not reload the page or re-run Angular's ngOnInit.
+  await page.goto('about:blank');
   return urlText?.trim() ?? '';
 }
