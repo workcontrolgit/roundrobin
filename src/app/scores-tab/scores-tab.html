@@ -43,8 +43,11 @@
                 }
               </div>
             } @else if (ri === activeRoundIndex() && !readOnly) {
-              <!-- Active — score entry -->
+              <!-- Active — score entry with per-court readiness indicator -->
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+                <span [style.color]="courtReady(ri, court.courtName) ? '#52b788' : '#888'">
+                  {{ courtReady(ri, court.courtName) ? '✓' : '○' }}
+                </span>
                 <span style="font-size:13px;">{{ playerName(court.team1[0]) }} &amp; {{ playerName(court.team1[1]) }}</span>
                 <input type="number" min="0" placeholder="0"
                        [ngModel]="getPending(ri, court.courtName).team1Score"
@@ -59,11 +62,6 @@
                        style="width:48px; background:#1a1a2e; border:1px solid #52b788; border-radius:4px; padding:4px; color:#cdd6f4; text-align:center;" />
                 <span style="font-size:13px;">{{ playerName(court.team2[0]) }} &amp; {{ playerName(court.team2[1]) }}</span>
               </div>
-              <button mat-raised-button color="primary" style="width:100%;"
-                      [disabled]="!canSave(ri, court.courtName)"
-                      (click)="saveScore(ri, court.courtName)">
-                Save {{ court.courtName }} Score
-              </button>
             } @else {
               <!-- Upcoming -->
               <div class="text-muted" style="font-size:13px;">
@@ -73,6 +71,13 @@
               </div>
             }
           </div>
+        }
+        @if (ri === activeRoundIndex() && !readOnly) {
+          <button mat-raised-button color="primary" style="width:100%; margin-top:4px;"
+                  [disabled]="!allCourtsReady(ri)"
+                  (click)="saveRound(ri)">
+            Save Round {{ round.roundNumber }} ({{ courtsReadyCount(ri) }}/{{ round.courts.length }} courts ready)
+          </button>
         }
       </mat-card-content>
     </mat-card>
