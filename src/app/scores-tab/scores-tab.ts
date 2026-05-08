@@ -2,7 +2,6 @@ import { Component, Input, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
 import { SessionService } from '../services/session.service';
 
 interface ScoreEntry {
@@ -13,7 +12,7 @@ interface ScoreEntry {
 @Component({
   selector: 'app-scores-tab',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatCardModule, MatInputModule],
+  imports: [CommonModule, FormsModule, MatCardModule],
   templateUrl: './scores-tab.html',
 })
 export class ScoresTab {
