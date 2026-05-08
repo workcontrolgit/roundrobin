@@ -26,6 +26,7 @@
                 <input type="number" min="0"
                        [ngModel]="court.score.team1"
                        (ngModelChange)="getPending(ri, court.courtName).team1Score = $event"
+                       (blur)="onBlurSave(ri, court.courtName)"
                        [disabled]="readOnly"
                        [attr.aria-label]="court.courtName + ' team 1 score'"
                        style="width:48px; background:#1a1a2e; border:1px solid #444; border-radius:4px; padding:4px; color:#a6e3a1; text-align:center;" />
@@ -33,31 +34,27 @@
                 <input type="number" min="0"
                        [ngModel]="court.score.team2"
                        (ngModelChange)="getPending(ri, court.courtName).team2Score = $event"
+                       (blur)="onBlurSave(ri, court.courtName)"
                        [disabled]="readOnly"
                        [attr.aria-label]="court.courtName + ' team 2 score'"
                        style="width:48px; background:#1a1a2e; border:1px solid #444; border-radius:4px; padding:4px; color:#f38ba8; text-align:center;" />
                 <span style="font-size:13px;">{{ playerName(court.team2[0]) }} &amp; {{ playerName(court.team2[1]) }}</span>
-                @if (!readOnly) {
-                  <button mat-stroked-button style="font-size:11px; height:28px; line-height:28px;"
-                          (click)="saveScore(ri, court.courtName)">Update</button>
-                }
               </div>
             } @else if (ri === activeRoundIndex() && !readOnly) {
-              <!-- Active — score entry with per-court readiness indicator -->
-              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
-                <span [style.color]="courtReady(ri, court.courtName) ? '#52b788' : '#888'">
-                  {{ courtReady(ri, court.courtName) ? '✓' : '○' }}
-                </span>
+              <!-- Active — score entry with auto-save on blur -->
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <span style="font-size:13px;">{{ playerName(court.team1[0]) }} &amp; {{ playerName(court.team1[1]) }}</span>
                 <input type="number" min="0" placeholder="0"
                        [ngModel]="getPending(ri, court.courtName).team1Score"
                        (ngModelChange)="getPending(ri, court.courtName).team1Score = $event"
+                       (blur)="onBlurSave(ri, court.courtName)"
                        [attr.aria-label]="court.courtName + ' team 1 score'"
                        style="width:48px; background:#1a1a2e; border:1px solid #52b788; border-radius:4px; padding:4px; color:#cdd6f4; text-align:center;" />
                 <span class="text-muted">–</span>
                 <input type="number" min="0" placeholder="0"
                        [ngModel]="getPending(ri, court.courtName).team2Score"
                        (ngModelChange)="getPending(ri, court.courtName).team2Score = $event"
+                       (blur)="onBlurSave(ri, court.courtName)"
                        [attr.aria-label]="court.courtName + ' team 2 score'"
                        style="width:48px; background:#1a1a2e; border:1px solid #52b788; border-radius:4px; padding:4px; color:#cdd6f4; text-align:center;" />
                 <span style="font-size:13px;">{{ playerName(court.team2[0]) }} &amp; {{ playerName(court.team2[1]) }}</span>
@@ -71,13 +68,6 @@
               </div>
             }
           </div>
-        }
-        @if (ri === activeRoundIndex() && !readOnly) {
-          <button mat-raised-button color="primary" style="width:100%; margin-top:4px;"
-                  [disabled]="!allCourtsReady(ri)"
-                  (click)="saveRound(ri)">
-            Save Round {{ round.roundNumber }} ({{ courtsReadyCount(ri) }}/{{ round.courts.length }} courts ready)
-          </button>
         }
       </mat-card-content>
     </mat-card>
