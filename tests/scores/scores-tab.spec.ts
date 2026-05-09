@@ -206,6 +206,30 @@ test.describe('Scores Tab', () => {
     await expect(page.getByLabel('Court 2 team 2 score').first()).toHaveValue('11');
   });
 
+  test('3.13 — Tab From Last Round 1 Input Auto-Focuses Round 2 Court 1 Team 1', async ({ page }) => {
+    await freshState(page);
+    await goToPlayers(page);
+    await setupSchedule(page);
+    await goToScores(page);
+
+    // Fill Court 1 with explicit clicks (reliable), then Tab from team2 to trigger blur+save
+    await page.getByLabel('Court 1 team 1 score').first().click();
+    await page.getByLabel('Court 1 team 1 score').first().pressSequentially('11');
+    await page.getByLabel('Court 1 team 2 score').first().click();
+    await page.getByLabel('Court 1 team 2 score').first().pressSequentially('7');
+    await page.keyboard.press('Tab'); // blur c1t2 → saves Court 1
+
+    // Fill Court 2 with explicit clicks, then Tab from team2 → completes Round 1
+    await page.getByLabel('Court 2 team 1 score').first().click();
+    await page.getByLabel('Court 2 team 1 score').first().pressSequentially('9');
+    await page.getByLabel('Court 2 team 2 score').first().click();
+    await page.getByLabel('Court 2 team 2 score').first().pressSequentially('11');
+    await page.keyboard.press('Tab'); // blur c2t2 → saves Court 2, round advances
+
+    // Fix: Round 2 Court 1 Team 1 should be auto-focused after re-render
+    await expect(page.locator('.round-card').nth(1).getByLabel('Court 1 team 1 score')).toBeFocused();
+  });
+
   test('3.11 — Partial Fill Does Not Auto-Save', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);

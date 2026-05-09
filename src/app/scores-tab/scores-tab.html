@@ -44,7 +44,8 @@
               <!-- Active — score entry with auto-save on blur -->
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <span style="font-size:13px;">{{ playerName(court.team1[0]) }} &amp; {{ playerName(court.team1[1]) }}</span>
-                <input type="number" min="0" placeholder="0"
+                <input #activeInput type="number" min="0" placeholder="0"
+                       data-active-input
                        [ngModel]="getPending(ri, court.courtName).team1Score"
                        (ngModelChange)="getPending(ri, court.courtName).team1Score = $event"
                        (blur)="onBlurSave(ri, court.courtName)"
