@@ -1,4 +1,4 @@
-import { Component, Input, inject, computed, effect } from '@angular/core';
+import { Component, Input, inject, computed, effect, AfterViewChecked, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -15,8 +15,9 @@ interface ScoreEntry {
   imports: [CommonModule, FormsModule, MatCardModule],
   templateUrl: './scores-tab.html',
 })
-export class ScoresTab {
+export class ScoresTab implements AfterViewChecked {
   @Input() readOnly = false;
+  @ViewChildren('activeInput') activeInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   readonly sessionService = inject(SessionService);
   readonly rounds = computed(() => this.sessionService.activeSession()?.rounds ?? []);
@@ -24,6 +25,7 @@ export class ScoresTab {
 
   // Per-round-per-court pending score inputs: key = `${roundIndex}-${courtName}`
   pendingScores: Record<string, ScoreEntry> = {};
+  private shouldFocusFirstActive = false;
 
   constructor() {
     // Clear pending inputs whenever the active session changes.
@@ -40,6 +42,13 @@ export class ScoresTab {
     }
     return rounds.length;
   });
+
+  ngAfterViewChecked(): void {
+    if (this.shouldFocusFirstActive) {
+      this.shouldFocusFirstActive = false;
+      this.activeInputs.first?.nativeElement.focus();
+    }
+  }
 
   playerName(id: string): string {
     return this.players().find(p => p.id === id)?.name ?? id;
@@ -64,8 +73,13 @@ export class ScoresTab {
     const team1 = pending.team1Score ?? court?.score?.team1 ?? null;
     const team2 = pending.team2Score ?? court?.score?.team2 ?? null;
     if (team1 != null && team2 != null && team1 >= 0 && team2 >= 0) {
+      const prevActive = this.activeRoundIndex();
       this.sessionService.saveScore(roundIndex, courtName, team1, team2);
       delete this.pendingScores[this.entryKey(roundIndex, courtName)];
+      if (this.activeRoundIndex() > prevActive) {
+        // Round advanced — set flag; ngAfterViewChecked will focus after Angular re-renders
+        this.shouldFocusFirstActive = true;
+      }
     }
   }
 }
