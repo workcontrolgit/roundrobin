@@ -69,16 +69,21 @@ export async function saveRound1Scores(
   court2: [number, number] = [9, 11],
 ): Promise<void> {
   await goToScores(page);
+  const heading = page.locator('h2').first();
 
-  // Court 1: fill both fields, Tab out of team2 to trigger onBlurSave
+  // Court 1: click to focus each field, fill value, click heading to blur and trigger onBlurSave
+  await page.getByLabel('Court 1 team 1 score').first().click();
   await page.getByLabel('Court 1 team 1 score').first().fill(String(court1[0]));
+  await page.getByLabel('Court 1 team 2 score').first().click();
   await page.getByLabel('Court 1 team 2 score').first().fill(String(court1[1]));
-  await page.getByLabel('Court 1 team 2 score').first().press('Tab');
+  await heading.click(); // blur Court 1 team 2 → triggers onBlurSave with both scores set
 
-  // Court 2: fill both fields, Tab out of team2 to trigger onBlurSave
+  // Court 2: same pattern
+  await page.getByLabel('Court 2 team 1 score').first().click();
   await page.getByLabel('Court 2 team 1 score').first().fill(String(court2[0]));
+  await page.getByLabel('Court 2 team 2 score').first().click();
   await page.getByLabel('Court 2 team 2 score').first().fill(String(court2[1]));
-  await page.getByLabel('Court 2 team 2 score').first().press('Tab');
+  await heading.click(); // blur Court 2 team 2 → triggers onBlurSave
 }
 
 /** Generate a valid share URL by setting up a full session */

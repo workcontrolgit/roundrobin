@@ -50,19 +50,24 @@ test.describe('Scores Tab', () => {
     await goToScores(page);
 
     const round1Card = page.locator('.round-card').first();
+    const heading = page.locator('h2').first();
 
-    // Fill Court 1 both scores, Tab out of team2 → auto-saves Court 1
+    // Fill Court 1 both scores, click heading to blur → auto-saves Court 1
+    await page.getByLabel('Court 1 team 1 score').first().click();
     await page.getByLabel('Court 1 team 1 score').first().fill('11');
+    await page.getByLabel('Court 1 team 2 score').first().click();
     await page.getByLabel('Court 1 team 2 score').first().fill('7');
-    await page.getByLabel('Court 1 team 2 score').first().press('Tab');
+    await heading.click();
 
     // Round 1 still active (Court 2 not yet saved)
     await expect(round1Card).toHaveClass(/active/);
 
-    // Fill Court 2, Tab out → Round 1 completes, Round 2 activates
+    // Fill Court 2, click heading → Round 1 completes, Round 2 activates
+    await page.getByLabel('Court 2 team 1 score').first().click();
     await page.getByLabel('Court 2 team 1 score').first().fill('9');
+    await page.getByLabel('Court 2 team 2 score').first().click();
     await page.getByLabel('Court 2 team 2 score').first().fill('11');
-    await page.getByLabel('Court 2 team 2 score').first().press('Tab');
+    await heading.click();
 
     await expect(round1Card).toHaveClass(/completed/);
     await expect(page.locator('.round-card').nth(1)).toHaveClass(/active/);
@@ -90,10 +95,13 @@ test.describe('Scores Tab', () => {
     await setupSchedule(page);
     await saveRound1Scores(page, [11, 7], [9, 11]);
 
-    // Edit only Court 1 team 1 score: fill 9, Tab out
+    const heading = page.locator('h2').first();
+
+    // Edit only Court 1 team 1 score: click to focus, fill 9, click heading to blur
     // onBlurSave uses team2 fallback from court.score.team2 (= 7)
+    await page.getByLabel('Court 1 team 1 score').first().click();
     await page.getByLabel('Court 1 team 1 score').first().fill('9');
-    await page.getByLabel('Court 1 team 1 score').first().press('Tab');
+    await heading.click();
 
     // Score updated to 9–7
     await expect(page.getByLabel('Court 1 team 1 score').first()).toHaveValue('9');
@@ -110,18 +118,24 @@ test.describe('Scores Tab', () => {
     await setupSchedule(page);
     await goToScores(page);
 
-    // Fill 0–0 for Court 1, Tab out → saves (>= 0 is valid)
+    const heading = page.locator('h2').first();
+
+    // Fill 0–0 for Court 1, click heading → saves (>= 0 is valid)
+    await page.getByLabel('Court 1 team 1 score').first().click();
     await page.getByLabel('Court 1 team 1 score').first().fill('0');
+    await page.getByLabel('Court 1 team 2 score').first().click();
     await page.getByLabel('Court 1 team 2 score').first().fill('0');
-    await page.getByLabel('Court 1 team 2 score').first().press('Tab');
+    await heading.click();
 
     // Round 1 still active (Court 2 not yet saved)
     await expect(page.locator('.round-card').first()).toHaveClass(/active/);
 
-    // Fill Court 2 with 0–0, Tab out → Round 1 completes
+    // Fill Court 2 with 0–0, click heading → Round 1 completes
+    await page.getByLabel('Court 2 team 1 score').first().click();
     await page.getByLabel('Court 2 team 1 score').first().fill('0');
+    await page.getByLabel('Court 2 team 2 score').first().click();
     await page.getByLabel('Court 2 team 2 score').first().fill('0');
-    await page.getByLabel('Court 2 team 2 score').first().press('Tab');
+    await heading.click();
 
     await expect(page.locator('.round-card').first()).toHaveClass(/completed/);
   });
@@ -132,10 +146,14 @@ test.describe('Scores Tab', () => {
     await setupSchedule(page);
     await goToScores(page);
 
-    // Enter -1 for team1, valid for team2, Tab out — onBlurSave rejects (< 0)
+    const heading = page.locator('h2').first();
+
+    // Enter -1 for team1, valid for team2, click heading — onBlurSave rejects (< 0)
+    await page.getByLabel('Court 1 team 1 score').first().click();
     await page.getByLabel('Court 1 team 1 score').first().fill('-1');
+    await page.getByLabel('Court 1 team 2 score').first().click();
     await page.getByLabel('Court 1 team 2 score').first().fill('11');
-    await page.getByLabel('Court 1 team 2 score').first().press('Tab');
+    await heading.click();
 
     // Round 1 still active (score was not saved)
     await expect(page.locator('.round-card').first()).toHaveClass(/active/);
@@ -194,9 +212,12 @@ test.describe('Scores Tab', () => {
     await setupSchedule(page);
     await goToScores(page);
 
-    // Fill only team1, Tab to team2 (blurs team1) — save must not fire
+    const heading = page.locator('h2').first();
+
+    // Fill only team1, click heading (blurs team1) — save must not fire (team2 null)
+    await page.getByLabel('Court 1 team 1 score').first().click();
     await page.getByLabel('Court 1 team 1 score').first().fill('11');
-    await page.getByLabel('Court 1 team 1 score').first().press('Tab');
+    await heading.click();
 
     // Round 1 still active (only one score entered)
     await expect(page.locator('.round-card').first()).toHaveClass(/active/);
