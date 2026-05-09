@@ -40,8 +40,8 @@ test.describe('Players Tab', () => {
     // 1. Click the "Player name" input
     await page.getByLabel('Player name').click();
 
-    // 2. Type Bob
-    await page.getByLabel('Player name').fill('Bob');
+    // 2. Type Bob (use pressSequentially to fire real key events for Angular ngModel)
+    await page.getByLabel('Player name').pressSequentially('Bob');
 
     // 3. Press Enter
     await page.keyboard.press('Enter');

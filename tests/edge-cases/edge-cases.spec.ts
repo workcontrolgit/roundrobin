@@ -3,7 +3,7 @@
 import { test, expect } from '@playwright/test';
 import {
   freshState, setupSchedule, saveRound1Scores,
-  goToScores, goToLeaderboard, addPlayers, EIGHT_PLAYERS, ELEVEN_PLAYERS,
+  goToScores, goToSchedule, goToLeaderboard, addPlayers, EIGHT_PLAYERS, ELEVEN_PLAYERS,
 } from '../helpers';
 
 test.describe('Edge Cases and Boundary Conditions', () => {
@@ -14,11 +14,12 @@ test.describe('Edge Cases and Boundary Conditions', () => {
     await setupSchedule(page);
     await goToScores(page);
 
-    // 1. Enter a value in Team 1 score only (leave Team 2 blank)
+    // 1. Enter a value in Team 1 score only (leave Team 2 blank), then blur
     await page.getByLabel('Court 1 team 1 score').first().fill('11');
+    await page.locator('h2').first().click(); // blur without team 2 filled — save should not happen
 
-    // Save button remains disabled
-    await expect(page.getByRole('button', { name: 'Save Court 1 Score' })).toBeDisabled();
+    // Score should NOT appear in the round card (no "11–" text)
+    await expect(page.locator('.round-card').first()).not.toContainText('11–');
   });
 
   test('11.2 — Score of Zero is Valid', async ({ page }) => {
@@ -28,14 +29,11 @@ test.describe('Edge Cases and Boundary Conditions', () => {
     await setupSchedule(page);
     await goToScores(page);
 
-    // 1. Enter 11 for Team 1 and 0 for Team 2
-    await page.getByLabel('Court 1 team 1 score').first().fill('11');
-    await page.getByLabel('Court 1 team 2 score').first().fill('0');
+    // Use saveRound1Scores with 11–0 for Court 1 to verify saving works
+    await saveRound1Scores(page, [11, 0], [9, 11]);
 
-    // 2. Click Save Court 1 Score
-    await page.getByRole('button', { name: 'Save Court 1 Score' }).click();
-
-    // Score saved as 11–0
+    // Check score on Schedule tab where completed rounds show static score text
+    await goToSchedule(page);
     await expect(page.locator('.round-card').first().getByText('11–0')).toBeVisible();
 
     // Leaderboard reflects Team 1's win and 11 points
@@ -50,14 +48,11 @@ test.describe('Edge Cases and Boundary Conditions', () => {
     await setupSchedule(page);
     await goToScores(page);
 
-    // 1. Enter 999 for Team 1 and 998 for Team 2
-    await page.getByLabel('Court 1 team 1 score').first().fill('999');
-    await page.getByLabel('Court 1 team 2 score').first().fill('998');
+    // Use saveRound1Scores with very large scores for Court 1
+    await saveRound1Scores(page, [999, 998], [9, 11]);
 
-    // 2. Click Save Court 1 Score
-    await page.getByRole('button', { name: 'Save Court 1 Score' }).click();
-
-    // Score saved without error
+    // Check score on Schedule tab where completed rounds show static score text
+    await goToSchedule(page);
     await expect(page.locator('.round-card').first().getByText('999–998')).toBeVisible();
   });
 

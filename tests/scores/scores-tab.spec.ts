@@ -15,7 +15,7 @@ test.describe('Scores Tab', () => {
     await expect(page.getByText('Round 1')).not.toBeVisible();
   });
 
-  test('3.2 — Active Round Shows Score Input Fields and Disabled Save Round Button', async ({ page }) => {
+  test('3.2 — Active Round Shows Score Inputs, No Buttons', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);
     await setupSchedule(page);
@@ -31,14 +31,9 @@ test.describe('Scores Tab', () => {
     await expect(page.getByLabel('Court 2 team 1 score').first()).toBeVisible();
     await expect(page.getByLabel('Court 2 team 2 score').first()).toBeVisible();
 
-    // No per-court Save buttons
-    await expect(page.getByRole('button', { name: 'Save Court 1 Score' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Save Court 2 Score' })).not.toBeVisible();
-
-    // Single Save Round button is visible but disabled (0/2 courts ready)
-    const saveRoundBtn = round1Card.getByRole('button', { name: /Save Round 1/ });
-    await expect(saveRoundBtn).toBeVisible();
-    await expect(saveRoundBtn).toBeDisabled();
+    // No Save or Update buttons anywhere
+    await expect(page.getByRole('button', { name: /Save/ })).not.toBeVisible();
+    await expect(page.getByRole('button', { name: 'Update' })).not.toBeVisible();
 
     // Rounds 2–7 are upcoming (no inputs)
     const allCards = page.locator('.round-card');
@@ -48,125 +43,123 @@ test.describe('Scores Tab', () => {
     }
   });
 
-  test('3.3 — Save Round Button Enables Only When ALL Courts Ready', async ({ page }) => {
+  test('3.3 — Auto-save Fires on Blur When Both Scores Valid', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);
     await setupSchedule(page);
     await goToScores(page);
 
     const round1Card = page.locator('.round-card').first();
-    const saveRoundBtn = round1Card.getByRole('button', { name: /Save Round 1/ });
+    const heading = page.locator('h2').first();
 
-    // Fill Court 1 only — button stays disabled (1/2)
+    // Fill Court 1 both scores, click heading to blur → auto-saves Court 1
+    await page.getByLabel('Court 1 team 1 score').first().click();
     await page.getByLabel('Court 1 team 1 score').first().fill('11');
+    await page.getByLabel('Court 1 team 2 score').first().click();
     await page.getByLabel('Court 1 team 2 score').first().fill('7');
-    await expect(saveRoundBtn).toBeDisabled();
+    await heading.click();
 
-    // Fill Court 2 — button becomes enabled (2/2)
+    // Round 1 still active (Court 2 not yet saved)
+    await expect(round1Card).toHaveClass(/active/);
+
+    // Fill Court 2, click heading → Round 1 completes, Round 2 activates
+    await page.getByLabel('Court 2 team 1 score').first().click();
     await page.getByLabel('Court 2 team 1 score').first().fill('9');
+    await page.getByLabel('Court 2 team 2 score').first().click();
     await page.getByLabel('Court 2 team 2 score').first().fill('11');
-    await expect(saveRoundBtn).toBeEnabled();
-  });
+    await heading.click();
 
-  test('3.4 — Court Checkmarks Show Per-Court Readiness', async ({ page }) => {
-    await freshState(page);
-    await goToPlayers(page);
-    await setupSchedule(page);
-    await goToScores(page);
-
-    // Both courts start with ○ (not ready)
-    await expect(page.getByText('○').first()).toBeVisible();
-
-    // Fill Court 1 — its checkmark becomes ✓
-    await page.getByLabel('Court 1 team 1 score').first().fill('11');
-    await page.getByLabel('Court 1 team 2 score').first().fill('7');
-    await expect(page.getByText('✓').first()).toBeVisible();
-
-    // Court 2 still shows ○
-    const circles = page.getByText('○');
-    await expect(circles.first()).toBeVisible();
-
-    // Fill Court 2 — both checkmarks are ✓
-    await page.getByLabel('Court 2 team 1 score').first().fill('9');
-    await page.getByLabel('Court 2 team 2 score').first().fill('11');
-    await expect(page.getByText('✓').nth(1)).toBeVisible();
-    await expect(page.getByText('○')).not.toBeVisible();
-  });
-
-  test('3.5 — Active Round Advances After Save Round', async ({ page }) => {
-    await freshState(page);
-    await goToPlayers(page);
-    await setupSchedule(page);
-    await goToScores(page);
-
-    // Fill and save Round 1
-    await page.getByLabel('Court 1 team 1 score').first().fill('11');
-    await page.getByLabel('Court 1 team 2 score').first().fill('7');
-    await page.getByLabel('Court 2 team 1 score').first().fill('9');
-    await page.getByLabel('Court 2 team 2 score').first().fill('11');
-    await page.getByRole('button', { name: /Save Round 1/ }).click();
-
-    // Round 1 transitions to completed
-    const round1Card = page.locator('.round-card').first();
     await expect(round1Card).toHaveClass(/completed/);
-    await expect(round1Card.getByRole('button', { name: /Save Round/ })).not.toBeVisible();
-
-    // Round 2 becomes active — Save Round 2 button appears
-    const round2Card = page.locator('.round-card').nth(1);
-    await expect(round2Card).toHaveClass(/active/);
-    await expect(round2Card.getByRole('button', { name: /Save Round 2/ })).toBeVisible();
+    await expect(page.locator('.round-card').nth(1)).toHaveClass(/active/);
   });
 
-  test('3.6 — Update Saved Score', async ({ page }) => {
+  test('3.4 — Round Advances After All Courts Auto-Saved', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);
     await setupSchedule(page);
     await saveRound1Scores(page, [11, 7], [9, 11]);
 
-    // In Round 1 Court 1: change Team 1 score from 11 to 9
-    await page.getByLabel('Court 1 team 1 score').first().fill('9');
-    await page.getByRole('button', { name: 'Update' }).first().click();
+    // Round 1 is completed, Round 2 is active
+    await expect(page.locator('.round-card').first()).toHaveClass(/completed/);
+    await expect(page.locator('.round-card').nth(1)).toHaveClass(/active/);
 
+    // Round 1 shows saved scores as editable inputs (no Update button)
+    await expect(page.getByLabel('Court 1 team 1 score').first()).toHaveValue('11');
+    await expect(page.getByLabel('Court 1 team 2 score').first()).toHaveValue('7');
+    await expect(page.getByRole('button', { name: 'Update' })).not.toBeVisible();
+  });
+
+  test('3.5 — Edit Completed Court Score via Blur (Fallback Save)', async ({ page }) => {
+    await freshState(page);
+    await goToPlayers(page);
+    await setupSchedule(page);
+    await saveRound1Scores(page, [11, 7], [9, 11]);
+
+    const heading = page.locator('h2').first();
+
+    // Edit only Court 1 team 1 score: click to focus, fill 9, click heading to blur
+    // onBlurSave uses team2 fallback from court.score.team2 (= 7)
+    await page.getByLabel('Court 1 team 1 score').first().click();
+    await page.getByLabel('Court 1 team 1 score').first().fill('9');
+    await heading.click();
+
+    // Score updated to 9–7
     await expect(page.getByLabel('Court 1 team 1 score').first()).toHaveValue('9');
     await expect(page.getByLabel('Court 1 team 2 score').first()).toHaveValue('7');
 
+    // Leaderboard reflects the updated score
     await goToLeaderboard(page);
     await expect(page.locator('mat-card').first()).toBeVisible();
   });
 
-  test('3.7 — Save Round Button Enabled for Zero-Zero Scores [NEGATIVE]', async ({ page }) => {
+  test('3.6 — Zero-Zero Scores Auto-Save on Blur', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);
     await setupSchedule(page);
     await goToScores(page);
 
-    // Enter 0–0 for both courts
+    const heading = page.locator('h2').first();
+
+    // Fill 0–0 for Court 1, click heading → saves (>= 0 is valid)
+    await page.getByLabel('Court 1 team 1 score').first().click();
     await page.getByLabel('Court 1 team 1 score').first().fill('0');
+    await page.getByLabel('Court 1 team 2 score').first().click();
     await page.getByLabel('Court 1 team 2 score').first().fill('0');
-    await page.getByLabel('Court 2 team 1 score').first().fill('0');
-    await page.getByLabel('Court 2 team 2 score').first().fill('0');
+    await heading.click();
 
-    // Save Round button is enabled (0–0 is a valid result per >= 0 check)
-    await expect(page.getByRole('button', { name: /Save Round 1/ })).toBeEnabled();
+    // Round 1 still active (Court 2 not yet saved)
+    await expect(page.locator('.round-card').first()).toHaveClass(/active/);
+
+    // Fill Court 2 with 0–0, click heading → Round 1 completes
+    await page.getByLabel('Court 2 team 1 score').first().click();
+    await page.getByLabel('Court 2 team 1 score').first().fill('0');
+    await page.getByLabel('Court 2 team 2 score').first().click();
+    await page.getByLabel('Court 2 team 2 score').first().fill('0');
+    await heading.click();
+
+    await expect(page.locator('.round-card').first()).toHaveClass(/completed/);
   });
 
-  test('3.8 — Negative Score Keeps Save Round Button Disabled [NEGATIVE]', async ({ page }) => {
+  test('3.7 — Negative Score Does Not Auto-Save [NEGATIVE]', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);
     await setupSchedule(page);
     await goToScores(page);
 
-    // Enter valid Court 2, but negative Court 1 Team 1
-    await page.getByLabel('Court 1 team 1 score').first().fill('-1');
-    await page.getByLabel('Court 1 team 2 score').first().fill('11');
-    await page.getByLabel('Court 2 team 1 score').first().fill('9');
-    await page.getByLabel('Court 2 team 2 score').first().fill('11');
+    const heading = page.locator('h2').first();
 
-    // Save Round button stays disabled (Court 1 fails >= 0 check)
-    await expect(page.getByRole('button', { name: /Save Round 1/ })).toBeDisabled();
+    // Enter -1 for team1, valid for team2, click heading — onBlurSave rejects (< 0)
+    await page.getByLabel('Court 1 team 1 score').first().click();
+    await page.getByLabel('Court 1 team 1 score').first().fill('-1');
+    await page.getByLabel('Court 1 team 2 score').first().click();
+    await page.getByLabel('Court 1 team 2 score').first().fill('11');
+    await heading.click();
+
+    // Round 1 still active (score was not saved)
+    await expect(page.locator('.round-card').first()).toHaveClass(/active/);
   });
 
-  test('3.9 — Upcoming Round Shows Read-Only Teams (No Input Fields)', async ({ page }) => {
+  test('3.8 — Upcoming Round Shows Read-Only Teams (No Inputs)', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);
     await setupSchedule(page);
@@ -178,77 +171,55 @@ test.describe('Scores Tab', () => {
       const card = allCards.nth(i);
       await expect(card.getByText('vs').first()).toBeVisible();
       await expect(card.locator('input[type="number"]')).not.toBeVisible();
-      await expect(card.getByRole('button', { name: /Save/ })).not.toBeVisible();
     }
   });
 
-  test('3.10 — Scores Tab in Read-Only Mode', async ({ page }) => {
+  test('3.9 — Scores Tab in Read-Only Mode', async ({ page }) => {
     const shareUrl = await generateShareUrl(page);
     await page.goto(shareUrl);
     await goToScores(page);
 
     await expect(page.getByText('Shared session — read only')).toBeVisible();
 
+    // Score inputs visible but disabled — no Save buttons
     const court1Input = page.getByLabel('Court 1 team 1 score').first();
     await expect(court1Input).toBeVisible();
     await expect(court1Input).toBeDisabled();
-
     await expect(page.getByRole('button', { name: /Save/ })).not.toBeVisible();
     await expect(page.getByRole('button', { name: 'Update' })).not.toBeVisible();
   });
 
-  test('3.11 — Score Persistence After Reload', async ({ page }) => {
+  test('3.10 — Score Persistence After Reload', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);
     await setupSchedule(page);
-    await goToScores(page);
+    await saveRound1Scores(page, [11, 7], [9, 11]);
 
-    // Save full Round 1
-    await page.getByLabel('Court 1 team 1 score').first().fill('11');
-    await page.getByLabel('Court 1 team 2 score').first().fill('7');
-    await page.getByLabel('Court 2 team 1 score').first().fill('9');
-    await page.getByLabel('Court 2 team 2 score').first().fill('11');
-    await page.getByRole('button', { name: /Save Round 1/ }).click();
-
-    // Reload
     await page.reload();
     await goToScores(page);
 
-    // Round 1 still shows saved scores
+    // Round 1 still completed with correct scores
+    await expect(page.locator('.round-card').first()).toHaveClass(/completed/);
     await expect(page.getByLabel('Court 1 team 1 score').first()).toHaveValue('11');
     await expect(page.getByLabel('Court 1 team 2 score').first()).toHaveValue('7');
     await expect(page.getByLabel('Court 2 team 1 score').first()).toHaveValue('9');
     await expect(page.getByLabel('Court 2 team 2 score').first()).toHaveValue('11');
-
-    // Both courts show Update buttons
-    const updateBtns = page.getByRole('button', { name: 'Update' });
-    await expect(updateBtns.nth(0)).toBeVisible();
-    await expect(updateBtns.nth(1)).toBeVisible();
   });
 
-  test('3.12 — Court Checkmarks Are Independent', async ({ page }) => {
+  test('3.11 — Partial Fill Does Not Auto-Save', async ({ page }) => {
     await freshState(page);
     await goToPlayers(page);
     await setupSchedule(page);
     await goToScores(page);
 
-    // Fill Court 1 — Court 1 gets ✓, Court 2 stays ○
+    const heading = page.locator('h2').first();
+
+    // Fill only team1, click heading (blurs team1) — save must not fire (team2 null)
+    await page.getByLabel('Court 1 team 1 score').first().click();
     await page.getByLabel('Court 1 team 1 score').first().fill('11');
-    await page.getByLabel('Court 1 team 2 score').first().fill('7');
-    await expect(page.getByText('✓').first()).toBeVisible();
-    await expect(page.getByText('○').first()).toBeVisible();
+    await heading.click();
 
-    // Fill Court 2 — both become ✓
-    await page.getByLabel('Court 2 team 1 score').first().fill('9');
-    await page.getByLabel('Court 2 team 2 score').first().fill('11');
-    await expect(page.getByText('✓').nth(1)).toBeVisible();
-    await expect(page.getByText('○')).not.toBeVisible();
-
-    // Clear a Court 1 score — Court 1 reverts to ○
-    await page.getByLabel('Court 1 team 1 score').first().fill('');
-    await expect(page.getByText('○').first()).toBeVisible();
-
-    // Court 2 checkmark is unaffected — still ✓
-    await expect(page.getByText('✓').first()).toBeVisible();
+    // Round 1 still active (only one score entered)
+    await expect(page.locator('.round-card').first()).toHaveClass(/active/);
   });
 });

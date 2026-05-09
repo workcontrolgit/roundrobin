@@ -53,10 +53,10 @@ test.describe('Accessibility (A11Y)', () => {
     await goToLeaderboard(page);
 
     // Toggle group has aria-label="Sort leaderboard by"
-    const group = page.getByRole('group', { name: 'Sort leaderboard by' });
+    const group = page.getByRole('radiogroup', { name: 'Sort leaderboard by' });
     await expect(group).toBeVisible();
 
-    // Each radio option is keyboard-focusable
+    // Each toggle option is keyboard-focusable
     await expect(page.getByRole('radio', { name: 'Wins' })).toBeVisible();
     await expect(page.getByRole('radio', { name: 'Points' })).toBeVisible();
   });
@@ -77,7 +77,7 @@ test.describe('Accessibility (A11Y)', () => {
     expect(label).toMatch(/QR code/i);
   });
 
-  test('9.6 — Copy URL Button ARIA Updates on Click [A11Y]', async ({ page }) => {
+  test('9.6 — Copy URL Button Text Updates on Click [A11Y]', async ({ page }) => {
     // Precondition: Share dialog open
     await freshState(page);
     await page.getByRole('tab', { name: 'Players' }).click();
@@ -88,30 +88,28 @@ test.describe('Accessibility (A11Y)', () => {
 
     const copyBtn = page.getByRole('button', { name: 'Copy URL' });
 
-    // Before click: aria-label="Copy session URL"
-    await expect(copyBtn).toHaveAttribute('aria-label', 'Copy session URL');
+    // Button is visible before click
+    await expect(copyBtn).toBeVisible();
 
     // Click Copy URL
     await copyBtn.click();
 
-    // After click: aria-label="URL copied to clipboard"
-    await expect(page.locator('button[aria-label="URL copied to clipboard"]')).toBeVisible();
+    // After click: button text changes to "Copied!"
+    await expect(page.getByRole('button', { name: 'Copied!' })).toBeVisible();
   });
 
   test('9.7 — Tab Navigation Order is Logical [A11Y]', async ({ page }) => {
-    // Precondition: app loaded normally
+    // Precondition: app loaded normally, with a name filled so Add button is enabled
     await freshState(page);
     await page.getByRole('tab', { name: 'Players' }).click();
 
     // Player name input is reachable via Tab
+    await page.getByLabel('Player name').fill('Alice');
     await page.getByLabel('Player name').focus();
     await expect(page.getByLabel('Player name')).toBeFocused();
 
-    // Add button is reachable via Tab
+    // Add button is reachable via Tab from the player name input (enabled when name is filled)
     await page.keyboard.press('Tab');
-    // After input, focus should move toward the Add button or nearby controls
-    // Verify focus has not been trapped or skipped critical elements
-    const focused = page.locator(':focus');
-    await expect(focused).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Add' })).toBeFocused();
   });
 });

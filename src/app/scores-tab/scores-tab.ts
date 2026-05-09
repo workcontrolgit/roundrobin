@@ -2,8 +2,6 @@ import { Component, Input, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
 import { SessionService } from '../services/session.service';
 
 interface ScoreEntry {
@@ -14,7 +12,7 @@ interface ScoreEntry {
 @Component({
   selector: 'app-scores-tab',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatCardModule, MatButtonModule, MatInputModule],
+  imports: [CommonModule, FormsModule, MatCardModule],
   templateUrl: './scores-tab.html',
 })
 export class ScoresTab {
@@ -28,8 +26,7 @@ export class ScoresTab {
   pendingScores: Record<string, ScoreEntry> = {};
 
   constructor() {
-    // Clear pending inputs whenever the active session changes (including after saves).
-    // This prevents stale inputs from one session appearing in another.
+    // Clear pending inputs whenever the active session changes.
     effect(() => {
       this.sessionService.activeSession();
       this.pendingScores = {};
@@ -60,42 +57,15 @@ export class ScoresTab {
     return this.pendingScores[key];
   }
 
-  canSave(roundIndex: number, courtName: string): boolean {
-    const entry = this.getPending(roundIndex, courtName);
-    return entry.team1Score != null && entry.team2Score != null &&
-           entry.team1Score >= 0 && entry.team2Score >= 0;
-  }
-
-  saveScore(roundIndex: number, courtName: string): void {
-    const entry = this.getPending(roundIndex, courtName);
-    if (!this.canSave(roundIndex, courtName)) return;
-    this.sessionService.saveScore(roundIndex, courtName, entry.team1Score!, entry.team2Score!);
-    delete this.pendingScores[this.entryKey(roundIndex, courtName)];
-  }
-
-  courtReady(roundIndex: number, courtName: string): boolean {
-    const entry = this.getPending(roundIndex, courtName);
-    return entry.team1Score != null && entry.team2Score != null &&
-           entry.team1Score >= 0 && entry.team2Score >= 0;
-  }
-
-  courtsReadyCount(roundIndex: number): number {
-    const courts = this.rounds()[roundIndex]?.courts ?? [];
-    return courts.filter(c => this.courtReady(roundIndex, c.courtName)).length;
-  }
-
-  allCourtsReady(roundIndex: number): boolean {
-    const courts = this.rounds()[roundIndex]?.courts ?? [];
-    return courts.length > 0 && this.courtsReadyCount(roundIndex) === courts.length;
-  }
-
-  saveRound(roundIndex: number): void {
-    const courts = this.rounds()[roundIndex]?.courts ?? [];
-    for (const court of courts) {
-      if (this.courtReady(roundIndex, court.courtName)) {
-        const entry = this.getPending(roundIndex, court.courtName);
-        this.sessionService.saveScore(roundIndex, court.courtName, entry.team1Score!, entry.team2Score!);
-      }
+  onBlurSave(roundIndex: number, courtName: string): void {
+    const court = this.rounds()[roundIndex]?.courts.find(c => c.courtName === courtName);
+    const pending = this.getPending(roundIndex, courtName);
+    // Fall back to existing saved score for fields the user didn't touch
+    const team1 = pending.team1Score ?? court?.score?.team1 ?? null;
+    const team2 = pending.team2Score ?? court?.score?.team2 ?? null;
+    if (team1 != null && team2 != null && team1 >= 0 && team2 >= 0) {
+      this.sessionService.saveScore(roundIndex, courtName, team1, team2);
+      delete this.pendingScores[this.entryKey(roundIndex, courtName)];
     }
   }
 }
