@@ -31,6 +31,10 @@ export class LeaderboardTab {
     );
   });
 
+  readonly hasScores = computed(() =>
+    this.sessionService.getPlayerStats().some(s => s.gamesPlayed > 0)
+  );
+
   medal(index: number): string {
     return ['🥇', '🥈', '🥉'][index] ?? '';
   }

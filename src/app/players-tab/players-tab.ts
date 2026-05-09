@@ -1,4 +1,4 @@
-import { Component, Input, signal, inject, computed } from '@angular/core';
+import { Component, Input, signal, inject, computed, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +23,7 @@ export class PlayersTab {
 
   readonly sessionService = inject(SessionService);
   readonly scheduleService = inject(ScheduleService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   newName = signal('');
 
@@ -34,6 +35,7 @@ export class PlayersTab {
     if (!this.canAdd()) return;
     this.sessionService.addPlayer(this.newName());
     this.newName.set('');
+    this.cdr.detectChanges();
   }
 
   removePlayer(id: string): void {
@@ -52,7 +54,11 @@ export class PlayersTab {
     this.sessionService.setRounds(rounds);
   }
 
-  onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') this.addPlayer();
+  onKeydown(event: KeyboardEvent, inputEl?: HTMLInputElement): void {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.addPlayer();
+      if (inputEl) inputEl.value = '';
+    }
   }
 }

@@ -82,6 +82,7 @@ test.describe('Share Dialog', () => {
     await saveRound1Scores(page);
     await goToLeaderboard(page);
     await page.getByRole('button', { name: 'Share QR' }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
 
     // 1. Copy the URL text from the dialog
     const urlText = await page.locator('mat-dialog-content p').textContent();

@@ -227,10 +227,13 @@ test.describe('Leaderboard Tab', () => {
     const aliceCard = page.locator('[role="row"]', { hasText: 'Alice' });
     await expect(aliceCard.getByText(/11\s*pts/i)).toBeVisible();
 
-    // Switch to Scores tab and update Court 1: Team 1 from 11 to 5
+    // Switch to Scores tab and update Court 1: Team 1 from 11 to 5 via blur auto-save
     await goToScores(page);
-    await page.getByLabel('Court 1 team 1 score').first().fill('5');
-    await page.getByRole('button', { name: 'Update' }).first().click();
+    const scoreInput = page.getByLabel('Court 1 team 1 score').first();
+    await scoreInput.click();
+    await scoreInput.selectText();
+    await scoreInput.pressSequentially('5');
+    await page.keyboard.press('Tab'); // blur triggers onBlurSave
 
     // Switch back to Leaderboard — Alice's points updated to 5
     await goToLeaderboard(page);

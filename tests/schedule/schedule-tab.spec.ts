@@ -157,20 +157,33 @@ test.describe('Schedule Tab', () => {
     await page.getByRole('tab', { name: 'Players' }).click();
     await setupSchedule(page);
 
-    // Score all 7 rounds
+    // Score all 7 rounds via blur auto-save
+    // Each completed round shows 2 editable score inputs (Court 1 + Court 2 team 1 scores)
+    // So for round N (0-based), the active round's Court 1 team 1 input is at index N
     await goToScores(page);
     for (let round = 0; round < 7; round++) {
-      const c1t1 = page.getByLabel('Court 1 team 1 score').first();
-      const c1t2 = page.getByLabel('Court 1 team 2 score').first();
-      await c1t1.fill('11');
-      await c1t2.fill('7');
-      await page.getByRole('button', { name: 'Save Court 1 Score' }).click();
+      // Active round Court 1 team 1 is at index `round` (after `round` completed rounds' inputs)
+      const c1t1 = page.getByLabel('Court 1 team 1 score').nth(round);
+      const c1t2 = page.getByLabel('Court 1 team 2 score').nth(round);
+      const c2t1 = page.getByLabel('Court 2 team 1 score').nth(round);
+      const c2t2 = page.getByLabel('Court 2 team 2 score').nth(round);
 
-      const c2t1 = page.getByLabel('Court 2 team 1 score').first();
-      const c2t2 = page.getByLabel('Court 2 team 2 score').first();
-      await c2t1.fill('9');
-      await c2t2.fill('11');
-      await page.getByRole('button', { name: 'Save Court 2 Score' }).click();
+      await c1t1.click();
+      await c1t1.pressSequentially('11');
+      await c1t2.click();
+      await c1t2.pressSequentially('7');
+      await page.keyboard.press('Tab'); // blur triggers onBlurSave for Court 1
+
+      await c2t1.click();
+      await c2t1.pressSequentially('9');
+      await c2t2.click();
+      await c2t2.pressSequentially('11');
+      await page.keyboard.press('Tab'); // blur triggers onBlurSave for Court 2
+
+      // Wait for round to be saved: Court 1 team 1 input count grows by 1 (now round+2 entries)
+      if (round < 6) {
+        await expect(page.getByLabel('Court 1 team 1 score')).toHaveCount(round + 2, { timeout: 5000 });
+      }
     }
 
     // Click the Schedule tab

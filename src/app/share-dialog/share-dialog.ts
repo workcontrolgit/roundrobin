@@ -29,10 +29,9 @@ export class ShareDialog implements OnInit {
   }
 
   copyUrl(): void {
-    navigator.clipboard.writeText(this.data.url).then(() => {
-      this.copied = true;
-      setTimeout(() => (this.copied = false), 2000);
-    }).catch(() => {
+    this.copied = true;
+    setTimeout(() => (this.copied = false), 2000);
+    navigator.clipboard.writeText(this.data.url).catch(() => {
       // Clipboard unavailable — user can copy URL manually from the text below
     });
   }
