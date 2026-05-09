@@ -31,6 +31,14 @@ export class App implements OnInit {
   constructor(readonly sessionService: SessionService) {}
 
   ngOnInit(): void {
+    this.loadFromHash();
+
+    // Also handle hash changes that happen without a full page reload
+    // (e.g., when navigating from the same base URL to a share URL)
+    window.addEventListener('hashchange', () => this.loadFromHash());
+  }
+
+  private loadFromHash(): void {
     // Check for shared session in URL hash
     const hash = window.location.hash.slice(1);
     if (hash) {
