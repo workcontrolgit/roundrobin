@@ -3,15 +3,13 @@
   <span style="flex:1"></span>
 
   @if (!isReadOnly()) {
-    <mat-select
-      [ngModel]="selectedDate()"
-      (ngModelChange)="onDateChange($event)"
-      style="width:140px; font-size:14px;"
+    <button
+      mat-button
+      (click)="openSessionDrawer()"
+      style="color:#89b4fa; font-size:13px; border:1px solid #444; border-radius:16px; padding:4px 14px; line-height:1.5;"
     >
-      @for (date of savedDates(); track date) {
-        <mat-option [value]="date">{{ date }}</mat-option>
-      }
-    </mat-select>
+      📅 {{ selectedDate() | date:'MMM d' }} · S{{ selectedSessionNumber() }} ▾
+    </button>
   } @else {
     <span style="font-size:14px; color:#89b4fa;">👁 View Only</span>
   }
