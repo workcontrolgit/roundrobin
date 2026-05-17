@@ -42,10 +42,10 @@ export class LeaderboardTab {
   resetSession(): void {
     const ok = confirm('Reset this session? All players, schedule, and scores will be cleared.');
     if (!ok) return;
-    const date = this.sessionService.activeSession()?.date;
-    if (date) {
-      this.sessionService.clearSession(date);
-      this.sessionService.initSession(date);
+    const session = this.sessionService.activeSession();
+    if (session) {
+      this.sessionService.clearSession(session.date, session.sessionNumber);
+      this.sessionService.initSession(session.date, session.sessionNumber);
     }
   }
 

@@ -8,33 +8,36 @@ export class SessionService {
 
   readonly activeSession = this._activeSession.asReadonly();
 
-  storageKey(date: string): string {
-    return `${this.PREFIX}${date}`;
+  storageKey(date: string, sessionNumber: number): string {
+    return `${this.PREFIX}${date}-${sessionNumber}`;
   }
 
   saveSession(session: Session): void {
-    localStorage.setItem(this.storageKey(session.date), JSON.stringify(session));
+    localStorage.setItem(this.storageKey(session.date, session.sessionNumber), JSON.stringify(session));
   }
 
-  loadSession(date: string): Session | null {
-    const raw = localStorage.getItem(this.storageKey(date));
+  loadSession(date: string, sessionNumber: number): Session | null {
+    const raw = localStorage.getItem(this.storageKey(date, sessionNumber));
     return raw ? (JSON.parse(raw) as Session) : null;
   }
 
   getSavedDates(): string[] {
-    const dates: string[] = [];
+    const dates = new Set<string>();
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)!;
       if (key.startsWith(this.PREFIX)) {
-        dates.push(key.slice(this.PREFIX.length));
+        const suffix = key.slice(this.PREFIX.length);
+        const match = suffix.match(/^(\d{4}-\d{2}-\d{2})-\d+$/);
+        if (match) dates.add(match[1]);
       }
     }
-    return dates.sort((a, b) => b.localeCompare(a));
+    return Array.from(dates).sort((a, b) => b.localeCompare(a));
   }
 
-  clearSession(date: string): void {
-    localStorage.removeItem(this.storageKey(date));
-    if (this._activeSession()?.date === date) {
+  clearSession(date: string, sessionNumber: number): void {
+    localStorage.removeItem(this.storageKey(date, sessionNumber));
+    const active = this._activeSession();
+    if (active?.date === date && active?.sessionNumber === sessionNumber) {
       this._activeSession.set(null);
     }
   }
@@ -43,15 +46,56 @@ export class SessionService {
     this._activeSession.set(session);
   }
 
-  initSession(date: string): void {
-    const existing = this.loadSession(date);
+  initSession(date: string, sessionNumber: number): void {
+    const existing = this.loadSession(date, sessionNumber);
     if (existing) {
       this._activeSession.set(existing);
     } else {
-      const session: Session = { date, players: [], rounds: [] };
+      const session: Session = { date, sessionNumber, players: [], rounds: [] };
       this.saveSession(session);
       this._activeSession.set(session);
     }
+  }
+
+  getSavedSessionsForDate(date: string): number[] {
+    const prefix = `${this.PREFIX}${date}-`;
+    const numbers: number[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)!;
+      if (key.startsWith(prefix)) {
+        const suffix = key.slice(prefix.length);
+        const n = parseInt(suffix, 10);
+        if (!isNaN(n) && String(n) === suffix) numbers.push(n);
+      }
+    }
+    return numbers.sort((a, b) => a - b);
+  }
+
+  getNextSessionNumber(date: string): number {
+    const sessions = this.getSavedSessionsForDate(date);
+    return sessions.length === 0 ? 1 : Math.max(...sessions) + 1;
+  }
+
+  migrateOldKeys(): void {
+    const keysToMigrate: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)!;
+      if (key.startsWith(this.PREFIX)) {
+        const suffix = key.slice(this.PREFIX.length);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(suffix)) {
+          keysToMigrate.push(key);
+        }
+      }
+    }
+    keysToMigrate.forEach(key => {
+      const raw = localStorage.getItem(key);
+      if (!raw) return;
+      const session = JSON.parse(raw) as Session;
+      session.sessionNumber = 1;
+      const newKey = `${key}-1`;
+      localStorage.setItem(newKey, JSON.stringify(session));
+      localStorage.removeItem(key);
+    });
   }
 
   todayDate(): string {
@@ -135,7 +179,6 @@ export class SessionService {
 
   encodeSessionToHash(session: Session): string {
     const json = JSON.stringify(session);
-    // Use TextEncoder for UTF-8 safe encoding (handles non-Latin1 player names)
     const bytes = new TextEncoder().encode(json);
     let binary = '';
     bytes.forEach(b => binary += String.fromCharCode(b));

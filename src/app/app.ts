@@ -51,7 +51,8 @@ export class App implements OnInit {
     }
     // Load today's session
     const today = this.sessionService.todayDate();
-    this.sessionService.initSession(today);
+    const todaySessionNum = this.sessionService.getSavedSessionsForDate(today)[0] ?? 1;
+    this.sessionService.initSession(today, todaySessionNum);
     this.selectedDate.set(today);
     this.refreshDates();
   }
@@ -65,7 +66,8 @@ export class App implements OnInit {
 
   onDateChange(date: string): void {
     this.selectedDate.set(date);
-    this.sessionService.initSession(date);
+    const sessionNum = this.sessionService.getSavedSessionsForDate(date)[0] ?? 1;
+    this.sessionService.initSession(date, sessionNum);
     this.refreshDates();
   }
 
