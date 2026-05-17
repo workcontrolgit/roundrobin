@@ -18,6 +18,7 @@ export interface Round {
 
 export interface Session {
   date: string;          // YYYY-MM-DD
+  sessionNumber: number; // 1, 2, 3… auto-assigned per day
   players: Player[];     // 8–11 players
   rounds: Round[];
 }
