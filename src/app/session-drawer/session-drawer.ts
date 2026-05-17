@@ -22,7 +22,7 @@ export interface SessionDrawerResult {
 })
 export class SessionDrawer {
   private readonly sheetRef = inject(MatBottomSheetRef<SessionDrawer, SessionDrawerResult>);
-  readonly sessionService = inject(SessionService);
+  private readonly sessionService = inject(SessionService);
   readonly data = inject<SessionDrawerData>(MAT_BOTTOM_SHEET_DATA);
 
   selectedDate = signal<string>(this.data.currentDate);
@@ -48,7 +48,10 @@ export class SessionDrawer {
   addNewSession(): void {
     const date = this.selectedDate();
     const sessionNumber = this.sessionService.getNextSessionNumber(date);
-    this.sessionService.initSession(date, sessionNumber);
     this.sheetRef.dismiss({ date, sessionNumber });
+  }
+
+  isCurrentSession(n: number): boolean {
+    return n === this.data.currentSessionNumber && this.selectedDate() === this.data.currentDate;
   }
 }

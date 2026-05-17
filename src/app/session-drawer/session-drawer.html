@@ -18,12 +18,12 @@
         (click)="selectSession(n)"
         [style.width]="'100%'"
         [style.margin-bottom]="'8px'"
-        [style.background]="n === data.currentSessionNumber && selectedDate() === data.currentDate ? '#52b788' : 'transparent'"
-        [style.color]="n === data.currentSessionNumber && selectedDate() === data.currentDate ? '#1a1a2e' : '#e0e0e0'"
-        [style.border-color]="n === data.currentSessionNumber && selectedDate() === data.currentDate ? '#52b788' : '#444'"
+        [style.background]="isCurrentSession(n) ? '#52b788' : 'transparent'"
+        [style.color]="isCurrentSession(n) ? '#1a1a2e' : '#e0e0e0'"
+        [style.border-color]="isCurrentSession(n) ? '#52b788' : '#444'"
       >
         Session {{ n }}
-        @if (n === data.currentSessionNumber && selectedDate() === data.currentDate) {
+        @if (isCurrentSession(n)) {
           <span style="margin-left:8px; font-size:11px; opacity:0.8;">✓ active</span>
         }
       </button>
