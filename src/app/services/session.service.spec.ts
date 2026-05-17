@@ -188,4 +188,59 @@ describe('SessionService', () => {
       expect(alice.totalPoints).toBe(11);
     });
   });
+
+  describe('getSavedSessionsForDate()', () => {
+    it('returns empty array when no sessions for that date', () => {
+      expect(service.getSavedSessionsForDate('2026-05-04')).toEqual([]);
+    });
+
+    it('returns sorted session numbers for the date', () => {
+      service.saveSession(makeSession('2026-05-04', 2));
+      service.saveSession(makeSession('2026-05-04', 1));
+      service.saveSession(makeSession('2026-05-04', 3));
+      expect(service.getSavedSessionsForDate('2026-05-04')).toEqual([1, 2, 3]);
+    });
+
+    it('does not include sessions from other dates', () => {
+      service.saveSession(makeSession('2026-05-04', 1));
+      service.saveSession(makeSession('2026-05-05', 1));
+      expect(service.getSavedSessionsForDate('2026-05-04')).toEqual([1]);
+    });
+  });
+
+  describe('getNextSessionNumber()', () => {
+    it('returns 1 when no sessions exist for the date', () => {
+      expect(service.getNextSessionNumber('2026-05-04')).toBe(1);
+    });
+
+    it('returns max session number + 1', () => {
+      service.saveSession(makeSession('2026-05-04', 1));
+      service.saveSession(makeSession('2026-05-04', 2));
+      expect(service.getNextSessionNumber('2026-05-04')).toBe(3);
+    });
+  });
+
+  describe('migrateOldKeys()', () => {
+    it('migrates old-format key to new format with sessionNumber 1', () => {
+      localStorage.setItem('pickleball-session-2026-03-15', JSON.stringify({
+        date: '2026-03-15',
+        players: [],
+        rounds: [],
+      }));
+      service.migrateOldKeys();
+      expect(localStorage.getItem('pickleball-session-2026-03-15')).toBeNull();
+      const migrated = JSON.parse(localStorage.getItem('pickleball-session-2026-03-15-1')!);
+      expect(migrated.date).toBe('2026-03-15');
+      expect(migrated.sessionNumber).toBe(1);
+    });
+
+    it('does not affect already-migrated keys', () => {
+      service.saveSession(makeSession('2026-03-15', 1));
+      service.migrateOldKeys();
+      // New-format key still present
+      expect(service.loadSession('2026-03-15', 1)).not.toBeNull();
+      // No spurious double-migration key
+      expect(localStorage.getItem('pickleball-session-2026-03-15-1-1')).toBeNull();
+    });
+  });
 });
