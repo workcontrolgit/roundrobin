@@ -49,8 +49,14 @@ test.describe('localStorage Persistence', () => {
 
     // Open drawer and switch to past date
     await page.getByRole('button', { name: /S1/ }).click();
-    await page.locator('input[type="date"]').fill(pastDate);
-    await page.keyboard.press('Tab');
+    await page.locator('input[type="date"]').evaluate(
+      (el: HTMLInputElement, date) => {
+        el.value = date;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+      pastDate
+    );
     await page.getByRole('button', { name: /Session 1/ }).click();
 
     // Past player is visible
@@ -60,8 +66,14 @@ test.describe('localStorage Persistence', () => {
     // Switch back to today — 0 players
     const today = new Date().toISOString().split('T')[0];
     await page.getByRole('button', { name: /S1/ }).click();
-    await page.locator('input[type="date"]').fill(today);
-    await page.keyboard.press('Tab');
+    await page.locator('input[type="date"]').evaluate(
+      (el: HTMLInputElement, date) => {
+        el.value = date;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+      today
+    );
     await page.getByRole('button', { name: /Session 1/ }).click();
 
     await page.getByRole('tab', { name: 'Players' }).click();

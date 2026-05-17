@@ -1,7 +1,7 @@
 // spec: specs/test-plan.md — Section 6
 
 import { test, expect } from '@playwright/test';
-import { freshState, addPlayers, generateShareUrl } from '../helpers';
+import { freshState, generateShareUrl } from '../helpers';
 
 const BASE_URL = 'http://localhost:4200/roundrobin';
 
@@ -45,8 +45,14 @@ test.describe('Date Session Management', () => {
     await page.getByRole('button', { name: /S1/ }).click();
 
     // Change date in drawer
-    await page.locator('input[type="date"]').fill(pastDate);
-    await page.keyboard.press('Tab');
+    await page.locator('input[type="date"]').evaluate(
+      (el: HTMLInputElement, date) => {
+        el.value = date;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+      pastDate
+    );
 
     // Select Session 1 for past date
     await page.getByRole('button', { name: /Session 1/ }).click();
@@ -94,14 +100,21 @@ test.describe('Date Session Management', () => {
 
     // Open drawer and set a future date
     await page.getByRole('button', { name: /S1/ }).click();
-    await page.locator('input[type="date"]').fill(futureDate);
-    await page.keyboard.press('Tab');
+    await page.locator('input[type="date"]').evaluate(
+      (el: HTMLInputElement, date) => {
+        el.value = date;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+      futureDate
+    );
 
     // Create Session 1 for future date
     await page.getByRole('button', { name: /New Session/ }).click();
 
-    // Chip now shows future date · S1
-    await expect(page.getByRole('button', { name: /S1/ })).toBeVisible();
+    // Chip now shows future date · S1 (format: "Jan 15 · S1")
+    const futureFormatted = new Date(futureDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    await expect(page.getByRole('button', { name: new RegExp(futureFormatted) })).toBeVisible();
 
     // Add a player to verify session works for future date
     await page.getByRole('tab', { name: 'Players' }).click();
