@@ -42,6 +42,14 @@ export class SessionService {
     }
   }
 
+  resetRoundsAndScores(date: string, sessionNumber: number): void {
+    this.update(s => ({ ...s, rounds: [] }));
+  }
+
+  resetEverything(date: string, sessionNumber: number): void {
+    this.update(s => ({ ...s, players: [], rounds: [] }));
+  }
+
   loadSharedSession(session: Session): void {
     this._activeSession.set(session);
   }
