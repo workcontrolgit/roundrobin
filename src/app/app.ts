@@ -63,10 +63,22 @@ export class App implements OnInit {
       } as SessionDrawerData,
     });
     ref.afterDismissed().subscribe((result?: SessionDrawerResult) => {
-      if (result) {
+      if (!result) return;
+      if (result.deleted) {
+        this.onSessionDeleted(result.date, result.sessionNumber);
+      } else {
         this.onSessionChange(result.date, result.sessionNumber);
       }
     });
+  }
+
+  onSessionDeleted(date: string, deletedNumber: number): void {
+    const remaining = this.sessionService.getSavedSessionsForDate(date);
+    const next = remaining.length > 0 ? remaining[0] : 1;
+    if (remaining.length === 0) {
+      this.sessionService.initSession(date, 1);
+    }
+    this.onSessionChange(date, next);
   }
 
   onSessionChange(date: string, sessionNumber: number): void {

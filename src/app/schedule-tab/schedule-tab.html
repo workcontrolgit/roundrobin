@@ -48,4 +48,11 @@
       </mat-card-content>
     </mat-card>
   }
+
+  @if (rounds().length > 0) {
+    <button mat-stroked-button color="warn" style="width:100%; margin-top:16px;"
+            (click)="openRegenerateDialog()">
+      Regenerate Schedule
+    </button>
+  }
 </div>

@@ -243,4 +243,65 @@ describe('SessionService', () => {
       expect(localStorage.getItem('pickleball-session-2026-03-15-1-1')).toBeNull();
     });
   });
+
+  describe('resetRoundsAndScores()', () => {
+    it('clears rounds but preserves players', () => {
+      service.initSession('2026-05-04', 1);
+      service.addPlayer('Alice');
+      service.addPlayer('Bob');
+      service.setRounds([{
+        roundNumber: 1,
+        courts: [{ courtName: 'Court 1', team1: ['a', 'b'], team2: ['c', 'd'] }],
+        sittingOut: [],
+      }]);
+      service.resetRoundsAndScores('2026-05-04', 1);
+      expect(service.activeSession()!.rounds).toEqual([]);
+      expect(service.activeSession()!.players.length).toBe(2);
+    });
+
+    it('updates active session signal', () => {
+      service.initSession('2026-05-04', 1);
+      service.setRounds([{
+        roundNumber: 1,
+        courts: [{ courtName: 'Court 1', team1: ['a', 'b'], team2: ['c', 'd'] }],
+        sittingOut: [],
+      }]);
+      service.resetRoundsAndScores('2026-05-04', 1);
+      expect(service.activeSession()!.rounds.length).toBe(0);
+    });
+
+    it('persists to localStorage', () => {
+      service.initSession('2026-05-04', 1);
+      service.setRounds([{
+        roundNumber: 1,
+        courts: [{ courtName: 'Court 1', team1: ['a', 'b'], team2: ['c', 'd'] }],
+        sittingOut: [],
+      }]);
+      service.resetRoundsAndScores('2026-05-04', 1);
+      const saved = service.loadSession('2026-05-04', 1);
+      expect(saved!.rounds).toEqual([]);
+    });
+  });
+
+  describe('resetEverything()', () => {
+    it('clears both players and rounds', () => {
+      service.initSession('2026-05-04', 1);
+      service.addPlayer('Alice');
+      service.setRounds([{
+        roundNumber: 1,
+        courts: [{ courtName: 'Court 1', team1: ['a', 'b'], team2: ['c', 'd'] }],
+        sittingOut: [],
+      }]);
+      service.resetEverything('2026-05-04', 1);
+      expect(service.activeSession()!.players).toEqual([]);
+      expect(service.activeSession()!.rounds).toEqual([]);
+    });
+
+    it('keeps the session in localStorage (does not delete the key)', () => {
+      service.initSession('2026-05-04', 1);
+      service.addPlayer('Alice');
+      service.resetEverything('2026-05-04', 1);
+      expect(service.loadSession('2026-05-04', 1)).not.toBeNull();
+    });
+  });
 });
