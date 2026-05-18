@@ -5,7 +5,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SessionService } from '../services/session.service';
@@ -16,7 +15,7 @@ import { ScheduleService } from '../services/schedule.service';
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    MatCardModule, MatInputModule, MatButtonModule, MatIconModule, MatListModule, MatTooltipModule,
+    MatCardModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule,
   ],
   templateUrl: './players-tab.html',
 })
