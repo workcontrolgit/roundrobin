@@ -1,0 +1,43 @@
+<div style="padding:16px; max-width:400px; margin:0 auto;">
+  <h3 style="margin:0 0 16px; color:#52b788; font-size:16px; font-weight:600;">Switch Session</h3>
+
+  <div style="margin-bottom:16px;">
+    <label style="display:block; font-size:12px; color:#aaa; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Date</label>
+    <input
+      type="date"
+      [ngModel]="selectedDate()"
+      (ngModelChange)="onDateChange($event)"
+      style="width:100%; background:#2a2a4e; color:#e0e0e0; border:1px solid #52b788; border-radius:4px; padding:8px 10px; font-size:14px; box-sizing:border-box;"
+    />
+  </div>
+
+  <div style="margin-bottom:12px;">
+    @for (n of sessions(); track n) {
+      <button
+        mat-stroked-button
+        (click)="selectSession(n)"
+        [style.width]="'100%'"
+        [style.margin-bottom]="'8px'"
+        [style.background]="isCurrentSession(n) ? '#52b788' : 'transparent'"
+        [style.color]="isCurrentSession(n) ? '#1a1a2e' : '#e0e0e0'"
+        [style.border-color]="isCurrentSession(n) ? '#52b788' : '#444'"
+      >
+        Session {{ n }}
+        @if (isCurrentSession(n)) {
+          <span style="margin-left:8px; font-size:11px; opacity:0.8;">✓ active</span>
+        }
+      </button>
+    }
+    @if (sessions().length === 0) {
+      <p style="color:#aaa; font-size:13px; text-align:center; margin:12px 0;">No sessions for this date yet</p>
+    }
+  </div>
+
+  <button
+    mat-stroked-button
+    (click)="addNewSession()"
+    style="width:100%; border-style:dashed; color:#52b788; border-color:#52b788;"
+  >
+    + New Session
+  </button>
+</div>
