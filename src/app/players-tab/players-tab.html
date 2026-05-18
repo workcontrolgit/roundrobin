@@ -26,15 +26,44 @@
 
   <mat-list>
     @for (player of players(); track player.id; let i = $index) {
-      <mat-list-item style="background:#2a2a3e; border-radius:8px; margin-bottom:6px;">
-        <span matListItemTitle style="font-size:18px;">{{ i + 1 }}. {{ player.name }}</span>
-        @if (!readOnly) {
-          <button matListItemMeta mat-icon-button color="warn" (click)="removePlayer(player.id)"
-                  [disabled]="scheduleGenerated()"
-                  [matTooltip]="scheduleGenerated() ? 'Cannot remove players after the schedule has been generated. Use Regenerate Schedule on the Schedule tab to start over.' : ''"
-                  [attr.aria-label]="'Remove ' + player.name">
-            <mat-icon>close</mat-icon>
-          </button>
+      <mat-list-item style="background:#2a2a3e; border-radius:8px; margin-bottom:6px; height:auto; padding:4px 0;">
+        @if (editingId() === player.id) {
+          <div style="display:flex; align-items:center; gap:8px; padding:4px 16px; width:100%; box-sizing:border-box;">
+            <mat-form-field appearance="outline" style="flex:1; font-size:16px;">
+              <input matInput [ngModel]="editName()" (ngModelChange)="editName.set($event)"
+                     (keydown.enter)="saveEdit(player.id)"
+                     (keydown.escape)="cancelEdit()"
+                     maxlength="30"
+                     [attr.aria-label]="'Edit name for ' + player.name" />
+              @if (!editName().trim()) {
+                <mat-error>Name is required</mat-error>
+              }
+            </mat-form-field>
+            <button mat-icon-button color="primary" (click)="saveEdit(player.id)"
+                    [disabled]="!editName().trim()"
+                    aria-label="Save name">
+              <mat-icon>check</mat-icon>
+            </button>
+            <button mat-icon-button (click)="cancelEdit()" aria-label="Cancel edit">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        } @else {
+          <ng-container>
+            <span matListItemTitle style="font-size:18px;">{{ i + 1 }}. {{ player.name }}</span>
+            @if (!readOnly) {
+              <button matListItemMeta mat-icon-button color="primary" (click)="startEdit(player)"
+                      [attr.aria-label]="'Edit ' + player.name">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button matListItemMeta mat-icon-button color="warn" (click)="removePlayer(player.id)"
+                      [disabled]="scheduleGenerated()"
+                      [matTooltip]="scheduleGenerated() ? 'Cannot remove players after the schedule has been generated. Use Regenerate Schedule on the Schedule tab to start over.' : ''"
+                      [attr.aria-label]="'Remove ' + player.name">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </ng-container>
         }
       </mat-list-item>
     }

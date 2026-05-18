@@ -29,6 +29,8 @@ export class PlayersTab {
   private readonly snackBar = inject(MatSnackBar);
 
   newName = signal('');
+  editingId = signal<string | null>(null);
+  editName = signal('');
 
   readonly players = computed(() => this.sessionService.activeSession()?.players ?? []);
   readonly canAdd = computed(() => this.players().length < 11 && this.newName().trim().length > 0);
@@ -50,6 +52,23 @@ export class PlayersTab {
       return;
     }
     this.sessionService.removePlayer(id);
+  }
+
+  startEdit(player: { id: string; name: string }): void {
+    this.editingId.set(player.id);
+    this.editName.set(player.name);
+  }
+
+  saveEdit(id: string): void {
+    if (!this.editName().trim()) return;
+    this.sessionService.renamePlayer(id, this.editName());
+    this.editingId.set(null);
+    this.editName.set('');
+  }
+
+  cancelEdit(): void {
+    this.editingId.set(null);
+    this.editName.set('');
   }
 
   generateSchedule(): void {
