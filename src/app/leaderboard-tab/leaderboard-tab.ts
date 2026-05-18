@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SessionService } from '../services/session.service';
 import { ShareDialog } from '../share-dialog/share-dialog';
+import { ConfirmDialog, ConfirmDialogData } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-leaderboard-tab',
@@ -39,14 +40,19 @@ export class LeaderboardTab {
     return ['🥇', '🥈', '🥉'][index] ?? '';
   }
 
-  resetSession(): void {
-    const ok = confirm('Reset this session? All players, schedule, and scores will be cleared.');
-    if (!ok) return;
-    const session = this.sessionService.activeSession();
-    if (session) {
-      this.sessionService.clearSession(session.date, session.sessionNumber);
-      this.sessionService.initSession(session.date, session.sessionNumber);
-    }
+  openResetDialog(): void {
+    const ref = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Reset Session?',
+        message: 'All players, rounds, and scores will be cleared.',
+        actions: [{ label: 'Reset', value: 'all', color: 'warn' }],
+      } as ConfirmDialogData,
+    });
+    ref.afterClosed().subscribe(value => {
+      if (value !== 'all') return;
+      const session = this.sessionService.activeSession();
+      if (session) this.sessionService.resetEverything(session.date, session.sessionNumber);
+    });
   }
 
   openShare(): void {
