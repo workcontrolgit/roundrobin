@@ -30,6 +30,8 @@
         <span matListItemTitle style="font-size:18px;">{{ i + 1 }}. {{ player.name }}</span>
         @if (!readOnly) {
           <button matListItemMeta mat-icon-button color="warn" (click)="removePlayer(player.id)"
+                  [disabled]="scheduleGenerated()"
+                  [matTooltip]="scheduleGenerated() ? 'Cannot remove players after the schedule has been generated. Use Regenerate Schedule on the Schedule tab to start over.' : ''"
                   [attr.aria-label]="'Remove ' + player.name">
             <mat-icon>close</mat-icon>
           </button>

@@ -6,6 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SessionService } from '../services/session.service';
 import { ScheduleService } from '../services/schedule.service';
 
@@ -14,7 +16,7 @@ import { ScheduleService } from '../services/schedule.service';
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    MatCardModule, MatInputModule, MatButtonModule, MatIconModule, MatListModule,
+    MatCardModule, MatInputModule, MatButtonModule, MatIconModule, MatListModule, MatTooltipModule,
   ],
   templateUrl: './players-tab.html',
 })
@@ -24,12 +26,16 @@ export class PlayersTab {
   readonly sessionService = inject(SessionService);
   readonly scheduleService = inject(ScheduleService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly snackBar = inject(MatSnackBar);
 
   newName = signal('');
 
   readonly players = computed(() => this.sessionService.activeSession()?.players ?? []);
   readonly canAdd = computed(() => this.players().length < 11 && this.newName().trim().length > 0);
   readonly canGenerate = computed(() => this.players().length >= 8);
+  readonly scheduleGenerated = computed(() =>
+    (this.sessionService.activeSession()?.rounds.length ?? 0) > 0
+  );
 
   addPlayer(): void {
     if (!this.canAdd()) return;
@@ -39,6 +45,10 @@ export class PlayersTab {
   }
 
   removePlayer(id: string): void {
+    if (this.scheduleGenerated()) {
+      this.snackBar.open('Roster is locked. Regenerate the schedule first.', 'OK', { duration: 3000 });
+      return;
+    }
     this.sessionService.removePlayer(id);
   }
 
