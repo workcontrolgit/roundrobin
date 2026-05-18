@@ -105,6 +105,6 @@ If you regularly help coordinate open play, a simpler setup at the start can mak
 
 If you organize pickleball games and want a simpler way to get people on the court, try RoundRobin here:
 
-https://workcontrolgit.github.io/roundrobin/
+https://workcontrolgit.github.io/roundrobin
 
 Open it on your phone, add the players who showed up, and see how quickly you can get your next impromptu session moving.
