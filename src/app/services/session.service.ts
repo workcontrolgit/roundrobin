@@ -129,6 +129,15 @@ export class SessionService {
     this.update(s => ({ ...s, players: s.players.filter(p => p.id !== id) }));
   }
 
+  renamePlayer(id: string, newName: string): void {
+    const trimmed = newName.trim();
+    if (!trimmed) return;
+    this.update(s => ({
+      ...s,
+      players: s.players.map(p => p.id === id ? { ...p, name: trimmed } : p),
+    }));
+  }
+
   setRounds(rounds: Round[]): void {
     this.update(s => ({ ...s, rounds }));
   }
