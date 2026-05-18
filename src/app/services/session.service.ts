@@ -138,6 +138,13 @@ export class SessionService {
     }));
   }
 
+  importPlayers(names: string[]): void {
+    names.forEach(name => {
+      const trimmed = name.trim();
+      if (trimmed) this.addPlayer(trimmed);
+    });
+  }
+
   setRounds(rounds: Round[]): void {
     this.update(s => ({ ...s, rounds }));
   }

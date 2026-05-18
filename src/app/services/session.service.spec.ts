@@ -339,4 +339,30 @@ describe('SessionService', () => {
       expect(service.loadSession('2026-05-04', 1)).not.toBeNull();
     });
   });
+
+  describe('importPlayers', () => {
+    it('adds each name as a new player with a unique UUID', () => {
+      service.initSession('2026-01-01', 1);
+      service.importPlayers(['Alice', 'Bob', 'Carol']);
+      const players = service.activeSession()!.players;
+      expect(players.length).toBe(3);
+      expect(players.map(p => p.name)).toEqual(['Alice', 'Bob', 'Carol']);
+      const ids = players.map(p => p.id);
+      expect(new Set(ids).size).toBe(3); // all unique
+    });
+
+    it('skips blank names', () => {
+      service.initSession('2026-01-01', 1);
+      service.importPlayers(['Alice', '  ', '', 'Bob']);
+      const players = service.activeSession()!.players;
+      expect(players.length).toBe(2);
+      expect(players.map(p => p.name)).toEqual(['Alice', 'Bob']);
+    });
+
+    it('trims whitespace from names', () => {
+      service.initSession('2026-01-01', 1);
+      service.importPlayers(['  Alice  ']);
+      expect(service.activeSession()!.players[0].name).toBe('Alice');
+    });
+  });
 });
