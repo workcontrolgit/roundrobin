@@ -13,20 +13,25 @@
 
   <div style="margin-bottom:12px;">
     @for (n of sessions(); track n) {
-      <button
-        mat-stroked-button
-        (click)="selectSession(n)"
-        [style.width]="'100%'"
-        [style.margin-bottom]="'8px'"
-        [style.background]="isCurrentSession(n) ? '#52b788' : 'transparent'"
-        [style.color]="isCurrentSession(n) ? '#1a1a2e' : '#e0e0e0'"
-        [style.border-color]="isCurrentSession(n) ? '#52b788' : '#444'"
-      >
-        Session {{ n }}
-        @if (isCurrentSession(n)) {
-          <span style="margin-left:8px; font-size:11px; opacity:0.8;">✓ active</span>
-        }
-      </button>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <button
+          mat-stroked-button
+          (click)="selectSession(n)"
+          style="flex:1;"
+          [style.background]="isCurrentSession(n) ? '#52b788' : 'transparent'"
+          [style.color]="isCurrentSession(n) ? '#1a1a2e' : '#e0e0e0'"
+          [style.border-color]="isCurrentSession(n) ? '#52b788' : '#444'"
+        >
+          Session {{ n }}
+          @if (isCurrentSession(n)) {
+            <span style="margin-left:8px; font-size:11px; opacity:0.8;">✓ active</span>
+          }
+        </button>
+        <button mat-icon-button color="warn" (click)="openDeleteDialog(n)"
+                [attr.aria-label]="'Delete session ' + n">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     }
     @if (sessions().length === 0) {
       <p style="color:#aaa; font-size:13px; text-align:center; margin:12px 0;">No sessions for this date yet</p>
