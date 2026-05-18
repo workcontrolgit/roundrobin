@@ -1,16 +1,20 @@
 import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SessionService } from '../services/session.service';
+import { ConfirmDialog, ConfirmDialogData } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-schedule-tab',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatDialogModule],
   templateUrl: './schedule-tab.html',
 })
 export class ScheduleTab {
   readonly sessionService = inject(SessionService);
+  private readonly dialog = inject(MatDialog);
 
   readonly rounds = computed(() => this.sessionService.activeSession()?.rounds ?? []);
   readonly players = computed(() => this.sessionService.activeSession()?.players ?? []);
@@ -21,7 +25,7 @@ export class ScheduleTab {
       const allScored = rounds[i].courts.every(c => c.score != null);
       if (!allScored) return i;
     }
-    return rounds.length; // all done
+    return rounds.length;
   });
 
   roundStatus(index: number): 'completed' | 'active' | 'upcoming' {
@@ -37,5 +41,20 @@ export class ScheduleTab {
 
   sittingOutNames(ids: string[]): string {
     return ids.map(id => this.playerName(id)).join(', ');
+  }
+
+  openRegenerateDialog(): void {
+    const ref = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Regenerate Schedule?',
+        message: 'All rounds and scores will be cleared. Your player list will be kept.',
+        actions: [{ label: 'Regenerate', value: 'regenerate', color: 'warn' }],
+      } as ConfirmDialogData,
+    });
+    ref.afterClosed().subscribe(value => {
+      if (value !== 'regenerate') return;
+      const session = this.sessionService.activeSession();
+      if (session) this.sessionService.resetRoundsAndScores(session.date, session.sessionNumber);
+    });
   }
 }
