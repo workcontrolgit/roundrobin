@@ -20,11 +20,12 @@ export class LanguageService {
   }
 
   setLanguage(lang: string): void {
+    if (!this.SUPPORTED.includes(lang)) return;
     localStorage.setItem(this.STORAGE_KEY, lang);
     this.translate.use(lang);
   }
 
   getCurrentLang(): string {
-    return this.translate.currentLang;
+    return this.translate.currentLang || this.DEFAULT;
   }
 }

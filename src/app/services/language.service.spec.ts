@@ -55,4 +55,12 @@ describe('LanguageService', () => {
     service.setLanguage('vi');
     expect(service.getCurrentLang()).toBe('vi');
   });
+
+  it('setLanguage() ignores invalid lang codes', () => {
+    service.init();
+    const useSpy = spyOn(translate, 'use').and.callThrough();
+    service.setLanguage('fr');
+    expect(localStorage.getItem('pickleball-lang')).toBeNull();
+    expect(useSpy).not.toHaveBeenCalled();
+  });
 });
