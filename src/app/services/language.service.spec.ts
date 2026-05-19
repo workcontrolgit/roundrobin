@@ -56,11 +56,19 @@ describe('LanguageService', () => {
     expect(service.getCurrentLang()).toBe('vi');
   });
 
+  it('getCurrentLang() returns default before init() is called', () => {
+    expect(service.getCurrentLang()).toBe('en');
+  });
+
   it('setLanguage() ignores invalid lang codes', () => {
-    service.init();
     const useSpy = spyOn(translate, 'use').and.callThrough();
-    service.setLanguage('fr');
-    expect(localStorage.getItem('pickleball-lang')).toBeNull();
+    localStorage.setItem('pickleball-lang', 'en'); // pre-set a valid value
+    service.init(); // now init reads 'en' from storage
+    useSpy.calls.reset(); // reset call count after init
+
+    service.setLanguage('fr'); // invalid lang
+
+    expect(localStorage.getItem('pickleball-lang')).toBe('en'); // unchanged
     expect(useSpy).not.toHaveBeenCalled();
   });
 });
