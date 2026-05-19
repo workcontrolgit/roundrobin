@@ -7,8 +7,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { TranslateModule } from '@ngx-translate/core';
 import { SessionService } from '../services/session.service';
 import { ScheduleService } from '../services/schedule.service';
+import { CopyPlayersSheet } from '../copy-players-sheet/copy-players-sheet';
 
 @Component({
   selector: 'app-players-tab',
@@ -16,6 +19,7 @@ import { ScheduleService } from '../services/schedule.service';
   imports: [
     CommonModule, FormsModule,
     MatCardModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule,
+    TranslateModule,
   ],
   templateUrl: './players-tab.html',
 })
@@ -26,6 +30,7 @@ export class PlayersTab {
   readonly scheduleService = inject(ScheduleService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly bottomSheet = inject(MatBottomSheet);
 
   newName = signal('');
   editingId = signal<string | null>(null);
@@ -37,6 +42,25 @@ export class PlayersTab {
   readonly scheduleGenerated = computed(() =>
     (this.sessionService.activeSession()?.rounds.length ?? 0) > 0
   );
+
+  readonly hasPreviousSessions = computed(() => {
+    const activeSession = this.sessionService.activeSession();
+    const currentKey = activeSession
+      ? `pickleball-session-${activeSession.date}-${activeSession.sessionNumber}`
+      : null;
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith('pickleball-session-') && key !== currentKey) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  openCopySheet(): void {
+    this.bottomSheet.open(CopyPlayersSheet);
+  }
 
   addPlayer(): void {
     if (!this.canAdd()) return;

@@ -20,6 +20,12 @@
     </div>
   }
 
+  @if (players().length === 0 && hasPreviousSessions()) {
+    <button mat-stroked-button data-testid="copy-players-btn" (click)="openCopySheet()" style="width: 100%; margin: 8px 0;">
+      {{ 'players.copy_button' | translate }}
+    </button>
+  }
+
   @if (players().length === 0) {
     <p class="text-muted" style="text-align:center;">Add 8–11 players to get started.</p>
   }

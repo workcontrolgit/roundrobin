@@ -1,10 +1,21 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { of } from 'rxjs';
 import { App } from './app';
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation() { return of({}); }
+}
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [
+        App,
+        TranslateModule.forRoot({ loader: { provide: TranslateLoader, useClass: FakeTranslateLoader } }),
+      ],
+      providers: [provideHttpClient()],
     }).compileComponents();
   });
 
