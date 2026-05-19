@@ -1,0 +1,27 @@
+<div style="padding: 20px;">
+  <!-- App header -->
+  <div style="text-align: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px;">
+    <img src="icon.svg" alt="App icon" style="width: 48px; height: 48px; margin-bottom: 8px;">
+    <div style="font-weight: 700; font-size: 16px;">Pickleball Round Robin</div>
+    <div style="color: #aaa; font-size: 13px;">{{ 'about.version' | translate: { version: appVersion } }}</div>
+  </div>
+
+  <!-- Credits -->
+  <div style="margin-bottom: 12px; font-size: 14px;">{{ 'about.built_by' | translate }}</div>
+
+  <!-- GitHub link -->
+  <a href="https://github.com/fujinguyen/pickleball-round-robin" target="_blank" rel="noopener"
+     style="display: block; margin-bottom: 20px; font-size: 14px; color: #89b4fa; text-decoration: underline;">
+    {{ 'about.github' | translate }}
+  </a>
+
+  <!-- Language selector -->
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>{{ 'about.language' | translate }}</mat-label>
+    <mat-select [value]="selectedLang" (selectionChange)="onLanguageChange($event.value)">
+      @for (lang of languages; track lang.code) {
+        <mat-option [value]="lang.code">{{ lang.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
