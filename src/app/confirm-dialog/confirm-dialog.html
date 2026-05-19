@@ -3,7 +3,7 @@
   <p class="text-muted" style="margin:0;">{{ data.message }}</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end" style="gap:8px; padding:16px;">
-  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-stroked-button (click)="cancel()">{{ 'common.cancel' | translate }}</button>
   @for (action of data.actions; track action.value) {
     <button mat-raised-button [color]="action.color ?? 'primary'" (click)="confirm(action.value)">
       {{ action.label }}
