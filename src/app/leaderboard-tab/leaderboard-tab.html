@@ -1,9 +1,9 @@
 <div style="max-width:500px; margin:0 auto;">
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-    <h2 style="margin:0; color:#52b788;">Leaderboard</h2>
+    <h2 style="margin:0; color:#52b788;">{{ 'leaderboard.title' | translate }}</h2>
     @if (!readOnly) {
       <button mat-stroked-button color="primary" (click)="openShare()">
-        Share QR
+        {{ 'leaderboard.share_button' | translate }}
       </button>
     }
   </div>
@@ -11,12 +11,12 @@
   <mat-button-toggle-group [value]="sortBy()" (change)="sortBy.set($event.value)"
                            aria-label="Sort leaderboard by"
                            style="margin-bottom:16px; width:100%;">
-    <mat-button-toggle value="wins" style="flex:1;">Wins</mat-button-toggle>
-    <mat-button-toggle value="points" style="flex:1;">Points</mat-button-toggle>
+    <mat-button-toggle value="wins" style="flex:1;">{{ 'leaderboard.sort_wins' | translate }}</mat-button-toggle>
+    <mat-button-toggle value="points" style="flex:1;">{{ 'leaderboard.sort_points' | translate }}</mat-button-toggle>
   </mat-button-toggle-group>
 
   @if (!hasScores()) {
-    <p class="text-muted" style="text-align:center;">No scores recorded yet.</p>
+    <p class="text-muted" style="text-align:center;">{{ 'leaderboard.empty_state' | translate }}</p>
   } @else {
     @for (entry of stats(); track entry.player.id; let i = $index) {
       <mat-card class="round-card" style="margin-bottom:8px;" role="row"
@@ -28,7 +28,7 @@
             </span>
             <div style="flex:1;">
               <div class="player-name">{{ entry.player.name }}</div>
-              <div class="player-stat text-muted">{{ entry.wins }} wins · {{ entry.totalPoints }} pts · {{ entry.gamesPlayed }} games</div>
+              <div class="player-stat text-muted">{{ 'leaderboard.stat_line' | translate: { wins: entry.wins, points: entry.totalPoints, games: entry.gamesPlayed } }}</div>
             </div>
             <span class="status-badge badge-completed">
               {{ sortBy() === 'wins' ? entry.wins + 'W' : entry.totalPoints + 'pts' }}
@@ -41,7 +41,7 @@
 
   @if (!readOnly) {
     <button mat-stroked-button color="warn" style="width:100%; margin-top:24px;" (click)="openResetDialog()">
-      Reset Session
+      {{ 'leaderboard.reset_button' | translate }}
     </button>
   }
 </div>

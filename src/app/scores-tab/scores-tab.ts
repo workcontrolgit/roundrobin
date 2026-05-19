@@ -2,6 +2,7 @@ import { Component, Input, inject, computed, effect, AfterViewChecked, ViewChild
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { TranslateModule } from '@ngx-translate/core';
 import { SessionService } from '../services/session.service';
 
 interface ScoreEntry {
@@ -12,7 +13,7 @@ interface ScoreEntry {
 @Component({
   selector: 'app-scores-tab',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatCardModule],
+  imports: [CommonModule, FormsModule, MatCardModule, TranslateModule],
   templateUrl: './scores-tab.html',
 })
 export class ScoresTab implements AfterViewChecked {

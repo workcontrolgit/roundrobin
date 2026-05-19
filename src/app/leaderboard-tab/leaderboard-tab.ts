@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SessionService } from '../services/session.service';
 import { ShareDialog } from '../share-dialog/share-dialog';
 import { ConfirmDialog, ConfirmDialogData } from '../confirm-dialog/confirm-dialog';
@@ -11,7 +12,7 @@ import { ConfirmDialog, ConfirmDialogData } from '../confirm-dialog/confirm-dial
 @Component({
   selector: 'app-leaderboard-tab',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatDialogModule],
+  imports: [CommonModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatDialogModule, TranslateModule],
   templateUrl: './leaderboard-tab.html',
 })
 export class LeaderboardTab {
@@ -19,6 +20,7 @@ export class LeaderboardTab {
 
   private readonly sessionService = inject(SessionService);
   private readonly dialog = inject(MatDialog);
+  private readonly translate = inject(TranslateService);
 
   sortBy = signal<'wins' | 'points'>('wins');
 
@@ -43,9 +45,9 @@ export class LeaderboardTab {
   openResetDialog(): void {
     const ref = this.dialog.open(ConfirmDialog, {
       data: {
-        title: 'Reset Session?',
-        message: 'All players, rounds, and scores will be cleared.',
-        actions: [{ label: 'Reset', value: 'all', color: 'warn' }],
+        title: this.translate.instant('leaderboard.reset_confirm_title'),
+        message: this.translate.instant('leaderboard.reset_confirm_message'),
+        actions: [{ label: this.translate.instant('leaderboard.reset_action'), value: 'all', color: 'warn' }],
       } as ConfirmDialogData,
     });
     ref.afterClosed().subscribe(value => {
