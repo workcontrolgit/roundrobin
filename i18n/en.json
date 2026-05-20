@@ -52,7 +52,8 @@
     "version": "v{{ version }}",
     "built_by": "Built by Fuji Nguyen",
     "github": "View on GitHub",
-    "language_label": "Language"
+    "language_label": "Language",
+    "language": "Language"
   },
   "common": {
     "cancel": "Cancel",
