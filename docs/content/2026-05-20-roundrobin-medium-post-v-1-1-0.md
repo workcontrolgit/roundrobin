@@ -1,6 +1,6 @@
 # RoundRobin 1.1.0: Four Things That Got Better for Pickleball Organizers
 
-![RoundRobin app](../../images/roundrobin.png)
+![RoundRobin app](../images/roundrobin.png)
 
 RoundRobin is a phone-friendly app that helps you get from "who showed up?" to a running round-robin session in a few taps — no spreadsheet, no whiteboard, no app install. Since the first version, several things that were slightly awkward got fixed. Here's what changed.
 
