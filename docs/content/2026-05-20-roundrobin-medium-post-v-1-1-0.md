@@ -58,6 +58,8 @@ In 1.1.0, resetting requires a deliberate confirmation step. A dialog appears an
 
 Two different needs, two different tools: add a new session for the day when you want a fresh start alongside the old one, or reset when you want a clean slate entirely.
 
+![Session drawer — Switch Session with + New Session button](screenshots/13-session-drawer-add-new.png)
+
 ![Session reset — confirm dialog before clearing](screenshots/12-session-reset-guard.png)
 
 ---
