@@ -52,7 +52,8 @@
     "version": "v{{ version }}",
     "built_by": "Tạo bởi Fuji Nguyen",
     "github": "Xem trên GitHub",
-    "language_label": "Ngôn ngữ"
+    "language_label": "Ngôn ngữ",
+    "language": "Ngôn ngữ"
   },
   "common": {
     "cancel": "Hủy",
