@@ -37,8 +37,8 @@ test.describe('Schedule Tab', () => {
       await expect(page.getByText(`Round ${r}`)).toBeVisible();
     }
 
-    // Round 1 has status badge NOW
-    await expect(page.locator('.round-card').first().getByText('NOW')).toBeVisible();
+    // Round 1 has status badge ACTIVE
+    await expect(page.locator('.round-card').first().getByText('ACTIVE')).toBeVisible();
 
     // Rounds 2–7 have status badge UPCOMING
     const cards = page.locator('.round-card');
@@ -125,9 +125,9 @@ test.describe('Schedule Tab', () => {
     const round1Card = page.locator('.round-card').first();
     await expect(round1Card.getByText('COMPLETED')).toBeVisible();
 
-    // Round 2 shows NOW badge
+    // Round 2 shows ACTIVE badge
     const round2Card = page.locator('.round-card').nth(1);
-    await expect(round2Card.getByText('NOW')).toBeVisible();
+    await expect(round2Card.getByText('ACTIVE')).toBeVisible();
 
     // Rounds 3–7 remain UPCOMING
     for (let i = 2; i < 7; i++) {
@@ -161,6 +161,7 @@ test.describe('Schedule Tab', () => {
     // Each completed round shows 2 editable score inputs (Court 1 + Court 2 team 1 scores)
     // So for round N (0-based), the active round's Court 1 team 1 input is at index N
     await goToScores(page);
+    const heading = page.locator('h2').first();
     for (let round = 0; round < 7; round++) {
       // Active round Court 1 team 1 is at index `round` (after `round` completed rounds' inputs)
       const c1t1 = page.getByLabel('Court 1 team 1 score').nth(round);
@@ -172,33 +173,36 @@ test.describe('Schedule Tab', () => {
       await c1t1.pressSequentially('11');
       await c1t2.click();
       await c1t2.pressSequentially('7');
-      await page.keyboard.press('Tab'); // blur triggers onBlurSave for Court 1
+      await heading.click(); // blur triggers onBlurSave for Court 1 (works across all browsers)
 
       await c2t1.click();
       await c2t1.pressSequentially('9');
       await c2t2.click();
       await c2t2.pressSequentially('11');
-      await page.keyboard.press('Tab'); // blur triggers onBlurSave for Court 2
+      await heading.click(); // blur triggers onBlurSave for Court 2 (works across all browsers)
 
       // Wait for round to be saved: Court 1 team 1 input count grows by 1 (now round+2 entries)
       if (round < 6) {
-        await expect(page.getByLabel('Court 1 team 1 score')).toHaveCount(round + 2, { timeout: 5000 });
+        await expect(page.getByLabel('Court 1 team 1 score')).toHaveCount(round + 2, { timeout: 10000 });
       }
     }
 
     // Click the Schedule tab
     await goToSchedule(page);
 
+    // Scope to the Schedule tabpanel to avoid counting Scores tab's round cards (both use .round-card)
+    const schedulePanel = page.getByRole('tabpanel', { name: 'Schedule' });
+
     // All 7 rounds show COMPLETED badge
-    const cards = page.locator('.round-card');
+    const cards = schedulePanel.locator('.round-card');
     const count = await cards.count();
     for (let i = 0; i < count; i++) {
       await expect(cards.nth(i).getByText('COMPLETED')).toBeVisible();
     }
 
-    // No round shows NOW or UPCOMING
-    await expect(page.getByText('NOW')).not.toBeVisible();
-    await expect(page.getByText('UPCOMING')).not.toBeVisible();
+    // No round shows ACTIVE or UPCOMING in the Schedule panel
+    await expect(schedulePanel.getByText('ACTIVE')).not.toBeVisible();
+    await expect(schedulePanel.getByText('UPCOMING')).not.toBeVisible();
   });
 
   test('2.9 — Player Names Display Correctly (Not UUIDs)', async ({ page }) => {

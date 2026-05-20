@@ -25,7 +25,7 @@ test.describe('localStorage Persistence', () => {
 
     await page.getByRole('tab', { name: 'Schedule' }).click();
     await expect(page.locator('.round-card').first().getByText('COMPLETED')).toBeVisible();
-    await expect(page.locator('.round-card').nth(1).getByText('NOW')).toBeVisible();
+    await expect(page.locator('.round-card').nth(1).getByText('ACTIVE')).toBeVisible();
   });
 
   test('8.2 — Multiple Dates Stored Independently', async ({ page }) => {
@@ -48,7 +48,7 @@ test.describe('localStorage Persistence', () => {
     await page.goto(BASE_URL);
 
     // Open drawer and switch to past date
-    await page.getByRole('button', { name: /S1/ }).click();
+    await page.getByRole('button', { name: /\| 1/ }).click();
     await page.locator('input[type="date"]').evaluate(
       (el: HTMLInputElement, date) => {
         el.value = date;
@@ -65,7 +65,7 @@ test.describe('localStorage Persistence', () => {
 
     // Switch back to today — 0 players
     const today = new Date().toISOString().split('T')[0];
-    await page.getByRole('button', { name: /S1/ }).click();
+    await page.getByRole('button', { name: /\| 1/ }).click();
     await page.locator('input[type="date"]').evaluate(
       (el: HTMLInputElement, date) => {
         el.value = date;
@@ -87,8 +87,10 @@ test.describe('localStorage Persistence', () => {
     await saveRound1Scores(page);
     await goToLeaderboard(page);
 
-    page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: 'Reset Session' }).click();
+    await page.locator('mat-dialog-actions button', { hasText: 'Reset' }).click();
+    // Wait for dialog to close and reset to complete
+    await expect(page.locator('.cdk-overlay-backdrop')).not.toBeVisible();
 
     // Verify localStorage re-created with empty data under new key format
     const today = new Date().toISOString().split('T')[0];

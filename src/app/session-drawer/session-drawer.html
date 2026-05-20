@@ -1,5 +1,5 @@
 <div style="padding:16px; max-width:400px; margin:0 auto;">
-  <h3 style="margin:0 0 16px; color:#52b788; font-size:16px; font-weight:600;">Switch Session</h3>
+  <h3 style="margin:0 0 16px; color:#52b788; font-size:16px; font-weight:600;">{{ 'session_drawer.title' | translate }}</h3>
 
   <div style="margin-bottom:16px;">
     <label style="display:block; font-size:12px; color:#aaa; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Date</label>
@@ -24,7 +24,7 @@
         >
           Session {{ n }}
           @if (isCurrentSession(n)) {
-            <span style="margin-left:8px; font-size:11px; opacity:0.8;">✓ active</span>
+            <span style="margin-left:8px; font-size:11px; opacity:0.8;">✓ {{ 'common.active' | translate }}</span>
           }
         </button>
         <button mat-icon-button color="warn" (click)="openDeleteDialog(n)"
@@ -34,7 +34,7 @@
       </div>
     }
     @if (sessions().length === 0) {
-      <p style="color:#aaa; font-size:13px; text-align:center; margin:12px 0;">No sessions for this date yet</p>
+      <p style="color:#aaa; font-size:13px; text-align:center; margin:12px 0;">{{ 'session_drawer.empty_state' | translate }}</p>
     }
   </div>
 
@@ -43,6 +43,6 @@
     (click)="addNewSession()"
     style="width:100%; border-style:dashed; color:#52b788; border-color:#52b788;"
   >
-    + New Session
+    {{ 'session_drawer.new_session' | translate }}
   </button>
 </div>

@@ -1,6 +1,11 @@
 <mat-toolbar color="primary" style="background:#1a1a2e; position:sticky; top:0; z-index:10;">
-  <span style="font-weight:bold; color:#52b788; font-size:18px;">🏓 Pickleball Round Robin</span>
+  <img src="icon.svg" alt="RB" style="width:28px; height:28px; margin-right:8px; border-radius:6px; vertical-align:middle;">
+  <span style="font-weight:bold; color:#52b788; font-size:18px;">Pickleball Round Robin</span>
   <span style="flex:1"></span>
+
+  <button mat-icon-button (click)="openAboutSheet()" aria-label="About">
+    <mat-icon>info</mat-icon>
+  </button>
 
   @if (!isReadOnly()) {
     <button
@@ -8,7 +13,7 @@
       (click)="openSessionDrawer()"
       style="color:#89b4fa; font-size:13px; border:1px solid #444; border-radius:16px; padding:4px 14px; line-height:1.5;"
     >
-      📅 {{ selectedDate() | date:'MMM d' }} · S{{ selectedSessionNumber() }} ▾
+      📅 {{ selectedDate() | date:'MMM d' }} | {{ selectedSessionNumber() }} ▾
     </button>
   } @else {
     <span style="font-size:14px; color:#89b4fa;">👁 View Only</span>

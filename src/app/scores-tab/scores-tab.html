@@ -1,8 +1,8 @@
 <div style="max-width:500px; margin:0 auto;">
-  <h2 style="color:#52b788;">Scores</h2>
+  <h2 style="color:#52b788;">{{ 'scores.title' | translate }}</h2>
 
   @if (rounds().length === 0) {
-    <p class="text-muted" style="text-align:center;">Generate a schedule first.</p>
+    <p class="text-muted" style="text-align:center;">{{ 'scores.empty_state' | translate }}</p>
   }
 
   @for (round of rounds(); track round.roundNumber; let ri = $index) {

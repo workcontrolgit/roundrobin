@@ -1,0 +1,61 @@
+{
+  "toolbar": {
+    "session_chip": "{{ date }} | {{ number }}"
+  },
+  "players": {
+    "title": "Players",
+    "add_placeholder": "Player name",
+    "add_button": "Add",
+    "copy_button": "Copy from previous session",
+    "copy_sheet_title": "Copy players from...",
+    "generate_button": "Generate Schedule ({{ count }} players · 2 courts)",
+    "need_more": "Add {{ needed }} more player(s) to generate schedule",
+    "empty_state": "Add 8–11 players to get started.",
+    "roster_locked_snack": "Roster is locked. Regenerate the schedule first."
+  },
+  "schedule": {
+    "title": "Schedule",
+    "empty_state": "Add 8–11 players on the Players tab and generate a schedule.",
+    "round": "Round {{ number }}",
+    "sitting_out": "Sitting out: {{ names }}",
+    "regenerate_button": "Regenerate Schedule",
+    "regenerate_confirm_title": "Regenerate Schedule?",
+    "regenerate_confirm_message": "All rounds and scores will be cleared. Your player list will be kept.",
+    "regenerate_action": "Regenerate"
+  },
+  "scores": {
+    "title": "Scores",
+    "empty_state": "Generate a schedule first."
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "share_button": "Share QR",
+    "sort_wins": "Wins",
+    "sort_points": "Points",
+    "empty_state": "No scores recorded yet.",
+    "stat_line": "{{ wins }} wins · {{ points }} pts · {{ games }} games",
+    "reset_button": "Reset Session",
+    "reset_confirm_title": "Reset Session?",
+    "reset_confirm_message": "All players, rounds, and scores will be cleared.",
+    "reset_action": "Reset"
+  },
+  "session_drawer": {
+    "title": "Switch Session",
+    "new_session": "+ New Session",
+    "delete_confirm_title": "Delete Session {{ number }}?",
+    "delete_confirm_message": "All players, rounds, and scores will be permanently removed.",
+    "delete_action": "Delete",
+    "empty_state": "No sessions for this date yet"
+  },
+  "about": {
+    "title": "About",
+    "version": "v{{ version }}",
+    "built_by": "Built by Fuji Nguyen",
+    "github": "View on GitHub",
+    "language_label": "Language"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "active": "active"
+  }
+}

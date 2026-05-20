@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -6,11 +6,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { SessionService } from './services/session.service';
+import { LanguageService } from './services/language.service';
 import { PlayersTab } from './players-tab/players-tab';
 import { ScheduleTab } from './schedule-tab/schedule-tab';
 import { ScoresTab } from './scores-tab/scores-tab';
 import { LeaderboardTab } from './leaderboard-tab/leaderboard-tab';
 import { SessionDrawer, SessionDrawerData, SessionDrawerResult } from './session-drawer/session-drawer';
+import { AboutSheet } from './about-sheet/about-sheet';
 
 @Component({
   selector: 'app-root',
@@ -28,10 +30,18 @@ export class App implements OnInit {
   selectedSessionNumber = signal<number>(1);
   readonly isReadOnly = signal<boolean>(false);
 
+  private readonly languageService = inject(LanguageService);
+
   constructor(
     readonly sessionService: SessionService,
     private readonly bottomSheet: MatBottomSheet,
-  ) {}
+  ) {
+    this.languageService.init();
+  }
+
+  openAboutSheet(): void {
+    this.bottomSheet.open(AboutSheet);
+  }
 
   ngOnInit(): void {
     this.loadFromHash();

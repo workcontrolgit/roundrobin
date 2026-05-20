@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1e3a"/>
+      <stop offset="100%" style="stop-color:#12122a"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6fcf97"/>
+      <stop offset="100%" style="stop-color:#52b788"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect width="512" height="512" rx="96" ry="96" fill="url(#bg)"/>
+
+  <!-- Pickleball circle (top-right accent) -->
+  <circle cx="390" cy="122" r="88" fill="none" stroke="#52b788" stroke-width="6" opacity="0.18"/>
+  <circle cx="390" cy="122" r="64" fill="none" stroke="#52b788" stroke-width="4" opacity="0.14"/>
+
+  <!-- Pickleball holes pattern (subtle) -->
+  <g fill="#52b788" opacity="0.12">
+    <circle cx="358" cy="90"  r="7"/>
+    <circle cx="390" cy="82"  r="7"/>
+    <circle cx="422" cy="90"  r="7"/>
+    <circle cx="434" cy="122" r="7"/>
+    <circle cx="422" cy="154" r="7"/>
+    <circle cx="390" cy="162" r="7"/>
+    <circle cx="358" cy="154" r="7"/>
+    <circle cx="346" cy="122" r="7"/>
+    <circle cx="390" cy="122" r="7"/>
+  </g>
+
+  <!-- Paddle handle (bottom-left accent) -->
+  <rect x="68" y="360" width="20" height="88" rx="10" fill="#52b788" opacity="0.20" transform="rotate(-35 78 404)"/>
+  <ellipse cx="96" cy="348" rx="52" ry="38" fill="none" stroke="#52b788" stroke-width="5" opacity="0.16" transform="rotate(-35 96 348)"/>
+
+  <!-- RB letters -->
+  <text
+    x="256" y="308"
+    font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+    font-size="224"
+    font-weight="900"
+    fill="url(#textGrad)"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    letter-spacing="-8"
+  >RB</text>
+
+  <!-- Subtle underline accent -->
+  <rect x="136" y="344" width="240" height="6" rx="3" fill="#52b788" opacity="0.5"/>
+</svg>

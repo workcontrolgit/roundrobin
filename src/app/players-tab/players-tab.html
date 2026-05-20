@@ -1,7 +1,7 @@
 <div style="max-width:500px; margin:0 auto;">
 
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-    <h2 style="margin:0; color:#52b788;">Players</h2>
+    <h2 style="margin:0; color:#52b788;">{{ 'players.title' | translate }}</h2>
     <span class="status-badge" [class]="players().length >= 8 ? 'badge-completed' : 'badge-upcoming'">
       {{ players().length }} / 11
     </span>
@@ -10,46 +10,79 @@
   @if (!readOnly) {
     <div style="display:flex; gap:8px; margin-bottom:16px; align-items:flex-start;">
       <mat-form-field appearance="outline" style="flex:1;">
-        <mat-label>Player name</mat-label>
+        <mat-label>{{ 'players.add_placeholder' | translate }}</mat-label>
         <input #nameInput matInput [ngModel]="newName()" (ngModelChange)="newName.set($event)" (keydown)="onKeydown($event, nameInput)" maxlength="30" />
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="addPlayer()" [disabled]="!canAdd()"
               style="margin-top:4px;">
-        Add
+        {{ 'players.add_button' | translate }}
       </button>
     </div>
   }
 
-  @if (players().length === 0) {
-    <p class="text-muted" style="text-align:center;">Add 8–11 players to get started.</p>
+  @if (players().length === 0 && hasPreviousSessions()) {
+    <button mat-stroked-button data-testid="copy-players-btn" (click)="openCopySheet()" style="width: 100%; margin: 8px 0;">
+      {{ 'players.copy_button' | translate }}
+    </button>
   }
 
-  <mat-list>
+  @if (players().length === 0) {
+    <p class="text-muted" style="text-align:center;">{{ 'players.empty_state' | translate }}</p>
+  }
+
+  <div>
     @for (player of players(); track player.id; let i = $index) {
-      <mat-list-item style="background:#2a2a3e; border-radius:8px; margin-bottom:6px;">
-        <span matListItemTitle style="font-size:18px;">{{ i + 1 }}. {{ player.name }}</span>
-        @if (!readOnly) {
-          <button matListItemMeta mat-icon-button color="warn" (click)="removePlayer(player.id)"
-                  [disabled]="scheduleGenerated()"
-                  [matTooltip]="scheduleGenerated() ? 'Cannot remove players after the schedule has been generated. Use Regenerate Schedule on the Schedule tab to start over.' : ''"
-                  [attr.aria-label]="'Remove ' + player.name">
+      <div style="background:#2a2a3e; border-radius:8px; margin-bottom:6px; display:flex; align-items:center; min-height:56px; padding:0 8px 0 16px;">
+
+        @if (editingId() === player.id) {
+          <mat-form-field appearance="outline" style="flex:1; margin:4px 0;">
+            <input matInput [ngModel]="editName()" (ngModelChange)="editName.set($event)"
+                   (keydown.enter)="saveEdit(player.id)"
+                   (keydown.escape)="cancelEdit()"
+                   maxlength="30"
+                   [attr.aria-label]="'Edit name for ' + player.name" />
+            @if (!editName().trim()) {
+              <mat-error>Name is required</mat-error>
+            }
+          </mat-form-field>
+          <button mat-icon-button color="primary" (click)="saveEdit(player.id)"
+                  [disabled]="!editName().trim()"
+                  aria-label="Save name">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button (click)="cancelEdit()" aria-label="Cancel edit">
             <mat-icon>close</mat-icon>
           </button>
+        } @else {
+          <span style="flex:1; font-size:18px;">{{ i + 1 }}. {{ player.name }}</span>
+          @if (!readOnly) {
+            <button mat-icon-button color="primary" (click)="startEdit(player)"
+                    [attr.aria-label]="'Edit ' + player.name">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="removePlayer(player.id)"
+                    [disabled]="scheduleGenerated()"
+                    [matTooltip]="scheduleGenerated() ? 'Cannot remove players after the schedule has been generated. Use Regenerate Schedule on the Schedule tab to start over.' : ''"
+                    [attr.aria-label]="'Remove ' + player.name">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
         }
-      </mat-list-item>
+
+      </div>
     }
-  </mat-list>
+  </div>
 
   @if (!readOnly && canGenerate()) {
     <button mat-raised-button color="primary" style="width:100%; margin-top:16px;"
             (click)="generateSchedule()">
-      Generate Schedule ({{ players().length }} players · 2 courts)
+      {{ 'players.generate_button' | translate:{count: players().length} }}
     </button>
   }
 
   @if (!readOnly && players().length > 0 && players().length < 8) {
     <p class="text-muted" style="text-align:center; margin-top:8px;">
-      Add {{ 8 - players().length }} more player(s) to generate schedule
+      {{ 'players.need_more' | translate:{needed: 8 - players().length} }}
     </p>
   }
 

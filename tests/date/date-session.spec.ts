@@ -18,8 +18,8 @@ test.describe('Date Session Management', () => {
   test('6.2 — Session Chip Shows Current Session Label', async ({ page }) => {
     await freshState(page);
 
-    // Chip displays "📅 <date> · S1"
-    await expect(page.getByRole('button', { name: /S1/ })).toBeVisible();
+    // Chip displays "📅 <date> | 1 ▾"
+    await expect(page.getByRole('button', { name: /\| 1/ })).toBeVisible();
   });
 
   test('6.3 — Switching to Past Date Loads Corresponding Session', async ({ page }) => {
@@ -42,7 +42,7 @@ test.describe('Date Session Management', () => {
     await page.goto(BASE_URL);
 
     // Open session drawer
-    await page.getByRole('button', { name: /S1/ }).click();
+    await page.getByRole('button', { name: /\| 1/ }).click();
 
     // Change date in drawer
     await page.locator('input[type="date"]').evaluate(
@@ -70,27 +70,27 @@ test.describe('Date Session Management', () => {
     await expect(page.getByText(/View Only/)).toBeVisible();
 
     // Session chip button is not visible
-    await expect(page.getByRole('button', { name: /S\d/ })).not.toBeVisible();
+    await expect(page.getByRole('button', { name: /\| \d/ })).not.toBeVisible();
   });
 
   test('6.5 — Multiple Sessions on Same Day', async ({ page }) => {
     await freshState(page);
 
     // Open drawer and create Session 2
-    await page.getByRole('button', { name: /S1/ }).click();
+    await page.getByRole('button', { name: /\| 1/ }).click();
     await page.getByRole('button', { name: /New Session/ }).click();
 
-    // Chip now shows S2
-    await expect(page.getByRole('button', { name: /S2/ })).toBeVisible();
+    // Chip now shows | 2
+    await expect(page.getByRole('button', { name: /\| 2/ })).toBeVisible();
 
     // Open drawer — both sessions listed
-    await page.getByRole('button', { name: /S2/ }).click();
+    await page.getByRole('button', { name: /\| 2/ }).click();
     await expect(page.getByRole('button', { name: /Session 1/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Session 2/ })).toBeVisible();
 
     // Switch back to Session 1
     await page.getByRole('button', { name: /Session 1/ }).click();
-    await expect(page.getByRole('button', { name: /S1/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /\| 1/ })).toBeVisible();
   });
 
   test('6.6 — Future Date Can Be Selected', async ({ page }) => {
@@ -99,7 +99,7 @@ test.describe('Date Session Management', () => {
     const futureDate = '2027-01-15';
 
     // Open drawer and set a future date
-    await page.getByRole('button', { name: /S1/ }).click();
+    await page.getByRole('button', { name: /\| 1/ }).click();
     await page.locator('input[type="date"]').evaluate(
       (el: HTMLInputElement, date) => {
         el.value = date;

@@ -1,7 +1,7 @@
 // spec: specs/test-plan.md
 // Shared helpers for Pickleball Round Robin Playwright tests
 
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 export const BASE_URL = process.env['BASE_URL'] ?? 'http://localhost:4200/roundrobin';
 
@@ -69,19 +69,25 @@ export async function saveRound1Scores(
 ): Promise<void> {
   await goToScores(page);
 
-  // Court 1: type scores then Tab away to trigger onBlurSave
+  // Use a stable non-interactive element to trigger blur (works across all browsers)
+  const heading = page.locator('h2').first();
+
+  // Court 1: type scores then click heading to blur → triggers onBlurSave
   await page.getByLabel('Court 1 team 1 score').first().click();
   await page.getByLabel('Court 1 team 1 score').first().pressSequentially(String(court1[0]));
   await page.getByLabel('Court 1 team 2 score').first().click();
   await page.getByLabel('Court 1 team 2 score').first().pressSequentially(String(court1[1]));
-  await page.keyboard.press('Tab'); // blur → triggers onBlurSave
+  await heading.click(); // blur → triggers onBlurSave for Court 1
 
   // Court 2: same pattern
   await page.getByLabel('Court 2 team 1 score').first().click();
   await page.getByLabel('Court 2 team 1 score').first().pressSequentially(String(court2[0]));
   await page.getByLabel('Court 2 team 2 score').first().click();
   await page.getByLabel('Court 2 team 2 score').first().pressSequentially(String(court2[1]));
-  await page.keyboard.press('Tab'); // blur → triggers onBlurSave
+  await heading.click(); // blur → triggers onBlurSave for Court 2
+
+  // Wait for Round 1 to transition to completed (ensures blur-save has fully processed)
+  await expect(page.locator('.round-card').first()).toHaveClass(/completed/, { timeout: 8000 });
 }
 
 /** Generate a valid share URL by setting up a full session */

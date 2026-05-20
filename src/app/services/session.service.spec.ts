@@ -283,6 +283,41 @@ describe('SessionService', () => {
     });
   });
 
+  describe('renamePlayer()', () => {
+    it('updates the player name', () => {
+      service.initSession('2026-05-18', 1);
+      service.addPlayer('Alice');
+      const id = service.activeSession()!.players[0].id;
+      service.renamePlayer(id, 'Alicia');
+      expect(service.activeSession()!.players[0].name).toBe('Alicia');
+    });
+
+    it('trims whitespace from new name', () => {
+      service.initSession('2026-05-18', 1);
+      service.addPlayer('Bob');
+      const id = service.activeSession()!.players[0].id;
+      service.renamePlayer(id, '  Bobby  ');
+      expect(service.activeSession()!.players[0].name).toBe('Bobby');
+    });
+
+    it('does nothing if new name is blank', () => {
+      service.initSession('2026-05-18', 1);
+      service.addPlayer('Carol');
+      const id = service.activeSession()!.players[0].id;
+      service.renamePlayer(id, '   ');
+      expect(service.activeSession()!.players[0].name).toBe('Carol');
+    });
+
+    it('persists the renamed player to localStorage', () => {
+      service.initSession('2026-05-18', 1);
+      service.addPlayer('Dave');
+      const id = service.activeSession()!.players[0].id;
+      service.renamePlayer(id, 'David');
+      const saved = service.loadSession('2026-05-18', 1);
+      expect(saved!.players[0].name).toBe('David');
+    });
+  });
+
   describe('resetEverything()', () => {
     it('clears both players and rounds', () => {
       service.initSession('2026-05-04', 1);
@@ -302,6 +337,32 @@ describe('SessionService', () => {
       service.addPlayer('Alice');
       service.resetEverything('2026-05-04', 1);
       expect(service.loadSession('2026-05-04', 1)).not.toBeNull();
+    });
+  });
+
+  describe('importPlayers', () => {
+    it('adds each name as a new player with a unique UUID', () => {
+      service.initSession('2026-01-01', 1);
+      service.importPlayers(['Alice', 'Bob', 'Carol']);
+      const players = service.activeSession()!.players;
+      expect(players.length).toBe(3);
+      expect(players.map(p => p.name)).toEqual(['Alice', 'Bob', 'Carol']);
+      const ids = players.map(p => p.id);
+      expect(new Set(ids).size).toBe(3); // all unique
+    });
+
+    it('skips blank names', () => {
+      service.initSession('2026-01-01', 1);
+      service.importPlayers(['Alice', '  ', '', 'Bob']);
+      const players = service.activeSession()!.players;
+      expect(players.length).toBe(2);
+      expect(players.map(p => p.name)).toEqual(['Alice', 'Bob']);
+    });
+
+    it('trims whitespace from names', () => {
+      service.initSession('2026-01-01', 1);
+      service.importPlayers(['  Alice  ']);
+      expect(service.activeSession()!.players[0].name).toBe('Alice');
     });
   });
 });

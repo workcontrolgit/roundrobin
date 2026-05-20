@@ -1,0 +1,16 @@
+<div style="padding: 16px;">
+  <h3 style="margin: 0 0 16px;">{{ 'players.copy_sheet_title' | translate }}</h3>
+
+  @for (group of dateGroups; track group.dateKey) {
+    <div style="font-size: 11px; text-transform: uppercase; color: #aaa; margin: 12px 0 6px;">
+      {{ group.date }}
+    </div>
+    @for (session of group.sessions; track session.sessionNumber) {
+      <button mat-list-item style="width: 100%; text-align: left; display: flex; justify-content: space-between;"
+              (click)="copySession(session)">
+        <span>Session {{ session.sessionNumber }}</span>
+        <span style="color: #aaa; font-size: 12px;">{{ session.playerCount }} players</span>
+      </button>
+    }
+  }
+</div>
