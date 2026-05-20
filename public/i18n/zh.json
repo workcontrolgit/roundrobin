@@ -52,7 +52,8 @@
     "version": "v{{ version }}",
     "built_by": "开发者：Fuji Nguyen",
     "github": "在 GitHub 上查看",
-    "language_label": "语言"
+    "language_label": "语言",
+    "language": "语言"
   },
   "common": {
     "cancel": "取消",
