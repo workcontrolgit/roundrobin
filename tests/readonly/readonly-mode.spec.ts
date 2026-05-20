@@ -32,7 +32,7 @@ test.describe('URL Hash / Read-Only Mode', () => {
     // Schedule tab: Round 1 COMPLETED, Round 2 NOW
     await page.getByRole('tab', { name: 'Schedule' }).click();
     await expect(page.locator('.round-card').first().getByText('COMPLETED')).toBeVisible();
-    await expect(page.locator('.round-card').nth(1).getByText('NOW')).toBeVisible();
+    await expect(page.locator('.round-card').nth(1).getByText('ACTIVE')).toBeVisible();
 
     // Scores tab: saved scores visible
     await page.getByRole('tab', { name: 'Scores' }).click();

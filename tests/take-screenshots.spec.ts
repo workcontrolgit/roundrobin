@@ -53,12 +53,13 @@ test('take all screenshots', async ({ page }) => {
   await screenshot(page, '04-scores-active.png');
 
   // ── Enter Round 1 scores ─────────────────────────────────────────────────
+  const scoresHeading = page.locator('h2').first();
   await page.getByLabel('Court 1 team 1 score').first().fill('11');
   await page.getByLabel('Court 1 team 2 score').first().fill('7');
-  await page.keyboard.press('Tab');
+  await scoresHeading.click(); // blur to trigger onBlurSave (works across all browsers)
   await page.getByLabel('Court 2 team 1 score').first().fill('9');
   await page.getByLabel('Court 2 team 2 score').first().fill('11');
-  await page.keyboard.press('Tab');
+  await scoresHeading.click(); // blur to trigger onBlurSave (works across all browsers)
 
   // ── 05: Scores tab — Round 2 active ─────────────────────────────────────
   await page.waitForTimeout(300);
@@ -81,10 +82,10 @@ test('take all screenshots', async ({ page }) => {
       await c1t1.waitFor({ timeout: 2000 });
       await c1t1.fill('11');
       await c1t2.fill('7');
-      await page.keyboard.press('Tab');
+      await scoresHeading.click(); // blur to trigger onBlurSave
       await c2t1.fill('9');
       await c2t2.fill('11');
-      await page.keyboard.press('Tab');
+      await scoresHeading.click(); // blur to trigger onBlurSave
     } catch {
       // round may have a different court count
     }

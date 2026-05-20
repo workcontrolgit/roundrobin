@@ -8,11 +8,11 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(),
-    ...provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),
     importProvidersFrom(
       TranslateModule.forRoot({
         defaultLanguage: 'en',
       })
     ),
+    ...provideTranslateHttpLoader({ prefix: 'i18n/', suffix: '.json' }),
   ]
 };

@@ -153,8 +153,8 @@ test.describe('Leaderboard Tab', () => {
     await goToLeaderboard(page);
 
     // 1. Click Reset Session, then Cancel
-    page.once('dialog', dialog => dialog.dismiss());
     await page.getByRole('button', { name: 'Reset Session' }).click();
+    await page.locator('mat-dialog-actions button', { hasText: 'Cancel' }).click();
 
     // Session data remains intact
     await page.getByRole('tab', { name: 'Players' }).click();
@@ -173,8 +173,8 @@ test.describe('Leaderboard Tab', () => {
     await goToLeaderboard(page);
 
     // 1. Click Reset Session, then OK
-    page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: 'Reset Session' }).click();
+    await page.locator('mat-dialog-actions button', { hasText: 'Reset' }).click();
 
     // Players tab shows 0 / 11
     await page.getByRole('tab', { name: 'Players' }).click();

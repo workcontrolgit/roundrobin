@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SessionService } from '../services/session.service';
 import { ScheduleService } from '../services/schedule.service';
 import { CopyPlayersSheet } from '../copy-players-sheet/copy-players-sheet';
@@ -30,6 +30,7 @@ export class PlayersTab {
   readonly scheduleService = inject(ScheduleService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly translate = inject(TranslateService);
   private readonly bottomSheet = inject(MatBottomSheet);
 
   newName = signal('');
@@ -71,7 +72,7 @@ export class PlayersTab {
 
   removePlayer(id: string): void {
     if (this.scheduleGenerated()) {
-      this.snackBar.open('Roster is locked. Regenerate the schedule first.', 'OK', { duration: 3000 });
+      this.snackBar.open(this.translate.instant('players.roster_locked_snack'), 'OK', { duration: 3000 });
       return;
     }
     this.sessionService.removePlayer(id);

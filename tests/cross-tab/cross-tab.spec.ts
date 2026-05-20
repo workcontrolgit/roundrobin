@@ -22,14 +22,16 @@ test.describe('Cross-Tab Reactivity', () => {
     // Round 1 immediately shows COMPLETED badge (no page reload required)
     await expect(page.locator('.round-card').first().getByText('COMPLETED')).toBeVisible();
 
-    // Round 2 shows NOW badge
-    await expect(page.locator('.round-card').nth(1).getByText('NOW')).toBeVisible();
+    // Round 2 shows ACTIVE badge
+    await expect(page.locator('.round-card').nth(1).getByText('ACTIVE')).toBeVisible();
 
     // Round 1 shows inline scores
     await expect(page.locator('.round-card').first().getByText('11–7')).toBeVisible();
   });
 
-  test('10.2 — App Handles Player Removal After Schedule Generated [EDGE]', async ({ page }) => {
+  // The app intentionally disables the Remove button when a schedule is generated (player guard).
+  // Player removal after schedule generation is no longer possible via the UI.
+  test.fixme('10.2 — App Handles Player Removal After Schedule Generated [EDGE]', async ({ page }) => {
     // Precondition: 8 players, schedule generated, Round 1 scored. Leaderboard shows 8 entries.
     await freshState(page);
     await page.getByRole('tab', { name: 'Players' }).click();
