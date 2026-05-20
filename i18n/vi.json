@@ -1,0 +1,61 @@
+{
+  "toolbar": {
+    "session_chip": "{{ date }} | {{ number }}"
+  },
+  "players": {
+    "title": "Người chơi",
+    "add_placeholder": "Tên người chơi",
+    "add_button": "Thêm",
+    "copy_button": "Sao chép từ buổi trước",
+    "copy_sheet_title": "Sao chép người chơi từ...",
+    "generate_button": "Tạo lịch ({{ count }} người · 2 sân)",
+    "need_more": "Thêm {{ needed }} người nữa để tạo lịch",
+    "empty_state": "Thêm 8–11 người để bắt đầu.",
+    "roster_locked_snack": "Danh sách đã khóa. Hãy tạo lại lịch trước."
+  },
+  "schedule": {
+    "title": "Lịch thi đấu",
+    "empty_state": "Thêm 8–11 người ở tab Người chơi và tạo lịch.",
+    "round": "Vòng {{ number }}",
+    "sitting_out": "Nghỉ: {{ names }}",
+    "regenerate_button": "Tạo lại lịch",
+    "regenerate_confirm_title": "Tạo lại lịch?",
+    "regenerate_confirm_message": "Tất cả vòng đấu và điểm sẽ bị xóa. Danh sách người chơi được giữ lại.",
+    "regenerate_action": "Tạo lại"
+  },
+  "scores": {
+    "title": "Điểm số",
+    "empty_state": "Hãy tạo lịch trước."
+  },
+  "leaderboard": {
+    "title": "Bảng xếp hạng",
+    "share_button": "Chia sẻ QR",
+    "sort_wins": "Thắng",
+    "sort_points": "Điểm",
+    "empty_state": "Chưa có điểm nào.",
+    "stat_line": "{{ wins }} thắng · {{ points }} điểm · {{ games }} trận",
+    "reset_button": "Đặt lại phiên",
+    "reset_confirm_title": "Đặt lại phiên?",
+    "reset_confirm_message": "Tất cả người chơi, vòng đấu và điểm sẽ bị xóa.",
+    "reset_action": "Đặt lại"
+  },
+  "session_drawer": {
+    "title": "Chuyển phiên",
+    "new_session": "+ Phiên mới",
+    "delete_confirm_title": "Xóa phiên {{ number }}?",
+    "delete_confirm_message": "Tất cả người chơi, vòng đấu và điểm sẽ bị xóa vĩnh viễn.",
+    "delete_action": "Xóa",
+    "empty_state": "Chưa có phiên nào cho ngày này"
+  },
+  "about": {
+    "title": "Giới thiệu",
+    "version": "v{{ version }}",
+    "built_by": "Tạo bởi Fuji Nguyen",
+    "github": "Xem trên GitHub",
+    "language_label": "Ngôn ngữ"
+  },
+  "common": {
+    "cancel": "Hủy",
+    "active": "đang chơi"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "toolbar": {
+    "session_chip": "{{ date }} | {{ number }}"
+  },
+  "players": {
+    "title": "プレイヤー",
+    "add_placeholder": "プレイヤー名",
+    "add_button": "追加",
+    "copy_button": "前のセッションからコピー",
+    "copy_sheet_title": "プレイヤーをコピー...",
+    "generate_button": "スケジュール生成（{{ count }} 人 · 2 コート）",
+    "need_more": "あと {{ needed }} 人追加してください",
+    "empty_state": "8〜11人のプレイヤーを追加してください。",
+    "roster_locked_snack": "名簿はロックされています。先にスケジュールを再生成してください。"
+  },
+  "schedule": {
+    "title": "スケジュール",
+    "empty_state": "プレイヤータブで8〜11人追加してスケジュールを生成してください。",
+    "round": "ラウンド {{ number }}",
+    "sitting_out": "休憩中：{{ names }}",
+    "regenerate_button": "スケジュール再生成",
+    "regenerate_confirm_title": "スケジュールを再生成しますか？",
+    "regenerate_confirm_message": "全ラウンドとスコアが削除されます。プレイヤーリストは保持されます。",
+    "regenerate_action": "再生成"
+  },
+  "scores": {
+    "title": "スコア",
+    "empty_state": "先にスケジュールを生成してください。"
+  },
+  "leaderboard": {
+    "title": "リーダーボード",
+    "share_button": "QR 共有",
+    "sort_wins": "勝利数",
+    "sort_points": "ポイント",
+    "empty_state": "まだスコアが記録されていません。",
+    "stat_line": "{{ wins }} 勝 · {{ points }} pt · {{ games }} 試合",
+    "reset_button": "セッションリセット",
+    "reset_confirm_title": "セッションをリセットしますか？",
+    "reset_confirm_message": "全プレイヤー、ラウンド、スコアが削除されます。",
+    "reset_action": "リセット"
+  },
+  "session_drawer": {
+    "title": "セッション切替",
+    "new_session": "+ 新しいセッション",
+    "delete_confirm_title": "セッション {{ number }} を削除しますか？",
+    "delete_confirm_message": "全プレイヤー、ラウンド、スコアが完全に削除されます。",
+    "delete_action": "削除",
+    "empty_state": "この日のセッションはまだありません"
+  },
+  "about": {
+    "title": "アプリ情報",
+    "version": "v{{ version }}",
+    "built_by": "開発：Fuji Nguyen",
+    "github": "GitHub で見る",
+    "language_label": "言語"
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "active": "進行中"
+  }
+}
