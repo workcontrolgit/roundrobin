@@ -1,4 +1,4 @@
-// spec: docs/superpowers/plans/2026-05-18-session-reset-and-player-guard.md — Tests 7.1–7.6
+// spec: docs/superpowers/plans/2026-05-18-session-reset-and-player-guard.md — Tests 7.1–7.8
 
 import { test, expect } from '@playwright/test';
 import { freshState, addPlayers, goToSchedule, goToPlayers, goToLeaderboard, EIGHT_PLAYERS } from '../helpers';
@@ -80,8 +80,8 @@ test.describe('Session Reset & Player Guard', () => {
     await addPlayers(page, EIGHT_PLAYERS);
 
     // Open session drawer
-    await page.getByRole('button', { name: /📅/ }).click();
-    await page.waitForSelector('mat-bottom-sheet-container');
+    await page.getByRole('button', { name: 'Open session drawer' }).click();
+    await expect(page.locator('mat-bottom-sheet-container')).toBeVisible();
 
     // Click delete on session 1
     await page.getByRole('button', { name: /delete/i }).first().click();
@@ -89,7 +89,7 @@ test.describe('Session Reset & Player Guard', () => {
     await page.locator('mat-dialog-actions button', { hasText: 'Delete' }).click();
 
     // App should be on Players tab
-    await expect(page.getByRole('tab', { name: 'Players' })).toHaveClass(/mdc-tab--active|mat-mdc-tab-active/);
+    await expect(page.getByRole('tab', { name: 'Players' })).toHaveAttribute('aria-selected', 'true');
 
     // Other tabs should be disabled
     await expect(page.getByRole('tab', { name: 'Schedule' })).toHaveAttribute('aria-disabled', 'true');
@@ -102,12 +102,13 @@ test.describe('Session Reset & Player Guard', () => {
     await addPlayers(page, EIGHT_PLAYERS);
 
     // Open session drawer and delete session 1
-    await page.getByRole('button', { name: /📅/ }).click();
-    await page.waitForSelector('mat-bottom-sheet-container');
+    await page.getByRole('button', { name: 'Open session drawer' }).click();
+    await expect(page.locator('mat-bottom-sheet-container')).toBeVisible();
     await page.getByRole('button', { name: /delete/i }).first().click();
     await page.locator('mat-dialog-actions button', { hasText: 'Delete' }).click();
 
-    // No active session — add a new player
+    // No active session — navigate to Players and add a new player
+    await goToPlayers(page);
     await page.getByLabel('Player name').fill('Zara');
     await page.getByRole('button', { name: 'Add' }).click();
     await expect(page.getByText('1. Zara')).toBeVisible();
