@@ -103,6 +103,20 @@ describe('SessionService', () => {
   });
 
   describe('addPlayer()', () => {
+    it('creates a new session when activeSession is null before adding a player', () => {
+      // No initSession called — activeSession starts as null
+      expect(service.activeSession()).toBeNull();
+
+      service.addPlayer('Alice');
+
+      expect(service.activeSession()).not.toBeNull();
+      expect(service.activeSession()!.players.length).toBe(1);
+      expect(service.activeSession()!.players[0].name).toBe('Alice');
+      // Session must also be persisted to localStorage
+      const sessions = service.getSavedSessionsForDate(service.todayDate());
+      expect(sessions.length).toBe(1);
+    });
+
     it('adds a player to the active session and saves', () => {
       service.initSession('2026-05-04', 1);
       service.addPlayer('Alice');
