@@ -29,6 +29,7 @@ export class App implements OnInit {
   selectedDate = signal<string>('');
   selectedSessionNumber = signal<number>(1);
   readonly isReadOnly = signal<boolean>(false);
+  selectedTabIndex = signal<number>(0);
 
   private readonly languageService = inject(LanguageService);
 
@@ -60,9 +61,14 @@ export class App implements OnInit {
     }
     this.sessionService.migrateOldKeys();
     const today = this.sessionService.todayDate();
-    this.sessionService.initSession(today, 1);
+    const sessions = this.sessionService.getSavedSessionsForDate(today);
+    if (sessions.length > 0) {
+      this.sessionService.initSession(today, sessions[0]);
+      this.selectedSessionNumber.set(sessions[0]);
+    } else {
+      this.selectedSessionNumber.set(0);
+    }
     this.selectedDate.set(today);
-    this.selectedSessionNumber.set(1);
   }
 
   openSessionDrawer(): void {
@@ -84,11 +90,13 @@ export class App implements OnInit {
 
   onSessionDeleted(date: string, deletedNumber: number): void {
     const remaining = this.sessionService.getSavedSessionsForDate(date);
-    const next = remaining.length > 0 ? remaining[0] : 1;
-    if (remaining.length === 0) {
-      this.sessionService.initSession(date, 1);
+    if (remaining.length > 0) {
+      this.onSessionChange(date, remaining[0]);
+    } else {
+      this.selectedDate.set(date);
+      this.selectedSessionNumber.set(0);
+      this.selectedTabIndex.set(0);
     }
-    this.onSessionChange(date, next);
   }
 
   onSessionChange(date: string, sessionNumber: number): void {
