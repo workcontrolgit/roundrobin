@@ -100,6 +100,7 @@ export class App implements OnInit {
   }
 
   onSessionChange(date: string, sessionNumber: number): void {
+    if (sessionNumber === 0) return;
     this.selectedDate.set(date);
     this.selectedSessionNumber.set(sessionNumber);
     this.sessionService.initSession(date, sessionNumber);
