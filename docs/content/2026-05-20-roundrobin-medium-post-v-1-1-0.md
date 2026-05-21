@@ -1,5 +1,7 @@
 # RoundRobin 1.1.0: Four Things That Got Better for Pickleball Organizers
 
+![RoundRobin app](../images/roundrobin.png)
+
 RoundRobin is a phone-friendly app that helps you get from "who showed up?" to a running round-robin session in a few taps — no spreadsheet, no whiteboard, no app install. Since the first version, several things that were slightly awkward got fixed. Here's what changed.
 
 ---
@@ -26,6 +28,8 @@ Pickleball has been growing fast, and open-play sessions in particular tend to d
 
 In 1.1.0 the app ships with multi-language support. A language selector in the About sheet lets you switch the full interface — menus, labels, buttons, everything — in a single tap. There is no reload, no separate version to find. You open About, choose your language, and the whole UI updates immediately.
 
+The initial release ships with four languages: English, Vietnamese, Chinese, and Japanese. More languages can be added as the community grows.
+
 It is a small change with a meaningful impact for any group that does not primarily use English. Handing someone your phone and asking them to enter scores is a lot easier when the screen is already in their language.
 
 ![About sheet — language selector open](screenshots/10-about-language-selector.png)
@@ -48,13 +52,17 @@ No save button. No lost progress.
 
 ## 4. Start a New Session Without Losing the Old One
 
-Here is a scenario that happens more than you might expect: you run a morning session with one group, finalize the leaderboard, celebrate the winner. Then the afternoon arrives and a completely different group shows up on the same courts. You need to clear everything — player names, scores, all of it — and start fresh for the new group.
+Here is a scenario that happens more than you might expect: you run a morning session with one group, finalize the leaderboard, celebrate the winner. Then the afternoon arrives and a completely different group shows up on the same courts. You want to start fresh for the new group — but you would also like to keep the morning session's results around.
 
-In the original version, that was a quick action with no confirmation. One tap and the session was gone. Which is convenient when you actually want to reset, but a real problem if you tap Reset by accident in the middle of entering scores. On a phone screen during an active session, accidental taps happen.
+In 1.1.0, you do not have to choose. The app organizes sessions by date, and you can add a new session under the same date without touching the one you already ran. Tap the date chip at the top, and you will see the option to create a new session alongside any existing ones for that day. The morning group's leaderboard stays intact while you set up the afternoon group from scratch.
 
-In 1.1.0, resetting the session requires a deliberate confirmation step. A dialog appears and asks you to confirm before anything is cleared. It is one extra tap, but it means that bumping the wrong button on a crowded screen — or handing your phone to someone who does not know the app — will not silently wipe a session you are still running.
+![Session drawer — Switch Session with + New Session button](screenshots/13-session-drawer-add-new.png)
 
-The old experience was resetting and immediately wishing you had not. The new experience is being asked "are you sure?" before anything disappears. It is the kind of safety net you do not notice until you need it.
+When you do want to clear everything — a full reset with no leftover data — that option is still there. But in the original version it had no confirmation. One tap and the session was gone, which was a real problem if you hit Reset by accident in the middle of entering scores.
+
+In 1.1.0, resetting requires a deliberate confirmation step. A dialog appears and asks you to confirm before anything is cleared. It is one extra tap, but it means that bumping the wrong button on a crowded screen will not silently wipe a session you are still running.
+
+Two different needs, two different tools: add a new session for the day when you want a fresh start alongside the old one, or reset when you want a clean slate entirely.
 
 ![Session reset — confirm dialog before clearing](screenshots/12-session-reset-guard.png)
 
