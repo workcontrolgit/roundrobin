@@ -82,4 +82,29 @@ test.describe('Players Tab', () => {
     // 3. Observe the Add button — should remain disabled
     await expect(page.getByRole('button', { name: 'Add' })).toBeDisabled();
   });
+
+  test('1.6 — Schedule, Scores, Leaderboard tabs are disabled on fresh state', async ({ page }) => {
+    await freshState(page);
+
+    await expect(page.getByRole('tab', { name: 'Schedule' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('tab', { name: 'Scores' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('tab', { name: 'Leaderboard' })).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  test('1.7 — Tabs become enabled after adding the first player', async ({ page }) => {
+    await freshState(page);
+
+    // Confirm tabs start disabled
+    await expect(page.getByRole('tab', { name: 'Schedule' })).toHaveAttribute('aria-disabled', 'true');
+
+    // Add one player
+    await page.getByLabel('Player name').fill('Alice');
+    await page.getByRole('button', { name: 'Add' }).click();
+    await expect(page.getByText('1. Alice')).toBeVisible();
+
+    // Tabs should now be enabled
+    await expect(page.getByRole('tab', { name: 'Schedule' })).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('tab', { name: 'Scores' })).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('tab', { name: 'Leaderboard' })).not.toHaveAttribute('aria-disabled', 'true');
+  });
 });

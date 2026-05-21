@@ -11,9 +11,10 @@
     <button
       mat-button
       (click)="openSessionDrawer()"
+      aria-label="Open session drawer"
       style="color:#89b4fa; font-size:13px; border:1px solid #444; border-radius:16px; padding:4px 14px; line-height:1.5;"
     >
-      📅 {{ selectedDate() | date:'MMM d' }} | {{ selectedSessionNumber() }} ▾
+      📅 {{ selectedDate() | date:'MMM d' }}@if (selectedSessionNumber() > 0) { | {{ selectedSessionNumber() }} } ▾
     </button>
   } @else {
     <span style="font-size:14px; color:#89b4fa;">👁 View Only</span>
@@ -26,17 +27,23 @@
   </div>
 }
 
-<mat-tab-group mat-stretch-tabs="false" animationDuration="200ms" style="margin-top:4px;">
+<mat-tab-group
+  mat-stretch-tabs="false"
+  animationDuration="200ms"
+  style="margin-top:4px;"
+  [selectedIndex]="selectedTabIndex()"
+  (selectedIndexChange)="selectedTabIndex.set($event)"
+>
   <mat-tab label="Players">
     <app-players-tab [readOnly]="isReadOnly()" />
   </mat-tab>
-  <mat-tab label="Schedule">
+  <mat-tab label="Schedule" [disabled]="!sessionService.activeSession()">
     <app-schedule-tab />
   </mat-tab>
-  <mat-tab label="Scores">
+  <mat-tab label="Scores" [disabled]="!sessionService.activeSession()">
     <app-scores-tab [readOnly]="isReadOnly()" />
   </mat-tab>
-  <mat-tab label="Leaderboard">
+  <mat-tab label="Leaderboard" [disabled]="!sessionService.activeSession()">
     <app-leaderboard-tab [readOnly]="isReadOnly()" />
   </mat-tab>
 </mat-tab-group>

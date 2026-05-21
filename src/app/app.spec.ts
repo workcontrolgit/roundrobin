@@ -69,6 +69,13 @@ describe('App', () => {
 
   it('should show session chip without S prefix', () => {
     const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    // Let ngOnInit run first so loadFromHash() completes
+    fixture.detectChanges();
+    // Now set the session signals
+    app.selectedDate.set('2026-05-21');
+    app.selectedSessionNumber.set(1);
+    // Detect changes to render with the session number
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     // The session button text should contain ' | ' separator but not 'S' before the number
