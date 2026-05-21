@@ -75,4 +75,47 @@ test.describe('Session Reset & Player Guard', () => {
     await expect(deleteBtn).toBeEnabled();
   });
 
+  test('7.7 Delete last session disables tabs and shows Players tab', async ({ page }) => {
+    await freshState(page);
+    await addPlayers(page, EIGHT_PLAYERS);
+
+    // Open session drawer
+    await page.getByRole('button', { name: /📅/ }).click();
+    await page.waitForSelector('mat-bottom-sheet-container');
+
+    // Click delete on session 1
+    await page.getByRole('button', { name: /delete/i }).first().click();
+    // Confirm the delete dialog
+    await page.locator('mat-dialog-actions button', { hasText: 'Delete' }).click();
+
+    // App should be on Players tab
+    await expect(page.getByRole('tab', { name: 'Players' })).toHaveClass(/mdc-tab--active|mat-mdc-tab-active/);
+
+    // Other tabs should be disabled
+    await expect(page.getByRole('tab', { name: 'Schedule' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('tab', { name: 'Scores' })).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('tab', { name: 'Leaderboard' })).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  test('7.8 Adding a player after delete creates a new session and re-enables tabs', async ({ page }) => {
+    await freshState(page);
+    await addPlayers(page, EIGHT_PLAYERS);
+
+    // Open session drawer and delete session 1
+    await page.getByRole('button', { name: /📅/ }).click();
+    await page.waitForSelector('mat-bottom-sheet-container');
+    await page.getByRole('button', { name: /delete/i }).first().click();
+    await page.locator('mat-dialog-actions button', { hasText: 'Delete' }).click();
+
+    // No active session — add a new player
+    await page.getByLabel('Player name').fill('Zara');
+    await page.getByRole('button', { name: 'Add' }).click();
+    await expect(page.getByText('1. Zara')).toBeVisible();
+
+    // Tabs should be enabled again
+    await expect(page.getByRole('tab', { name: 'Schedule' })).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('tab', { name: 'Scores' })).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('tab', { name: 'Leaderboard' })).not.toHaveAttribute('aria-disabled', 'true');
+  });
+
 });
