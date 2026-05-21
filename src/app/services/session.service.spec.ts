@@ -117,6 +117,13 @@ describe('SessionService', () => {
       expect(sessions.length).toBe(1);
     });
 
+    it('does not create a session when name is blank', () => {
+      expect(service.activeSession()).toBeNull();
+      service.addPlayer('   ');
+      expect(service.activeSession()).toBeNull();
+      expect(service.getSavedSessionsForDate(service.todayDate()).length).toBe(0);
+    });
+
     it('adds a player to the active session and saves', () => {
       service.initSession('2026-05-04', 1);
       service.addPlayer('Alice');

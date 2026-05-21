@@ -119,6 +119,7 @@ export class SessionService {
   }
 
   addPlayer(name: string): void {
+    if (!name.trim()) return;
     if (!this._activeSession()) {
       const today = this.todayDate();
       this.initSession(today, this.getNextSessionNumber(today));
