@@ -34,16 +34,20 @@
   [selectedIndex]="selectedTabIndex()"
   (selectedIndexChange)="selectedTabIndex.set($event)"
 >
-  <mat-tab label="Players">
+  <mat-tab>
+    <ng-template matTabLabel>{{ 'players.title' | translate }}</ng-template>
     <app-players-tab [readOnly]="isReadOnly()" />
   </mat-tab>
-  <mat-tab label="Schedule" [disabled]="!sessionService.activeSession()">
+  <mat-tab [disabled]="!sessionService.activeSession()">
+    <ng-template matTabLabel>{{ 'schedule.title' | translate }}</ng-template>
     <app-schedule-tab />
   </mat-tab>
-  <mat-tab label="Scores" [disabled]="!sessionService.activeSession()">
+  <mat-tab [disabled]="!sessionService.activeSession()">
+    <ng-template matTabLabel>{{ 'scores.title' | translate }}</ng-template>
     <app-scores-tab [readOnly]="isReadOnly()" />
   </mat-tab>
-  <mat-tab label="Leaderboard" [disabled]="!sessionService.activeSession()">
+  <mat-tab [disabled]="!sessionService.activeSession()">
+    <ng-template matTabLabel>{{ 'leaderboard.title' | translate }}</ng-template>
     <app-leaderboard-tab [readOnly]="isReadOnly()" />
   </mat-tab>
 </mat-tab-group>

@@ -1,0 +1,65 @@
+{
+  "toolbar": {
+    "session_chip": "{{ date }} | {{ number }}"
+  },
+  "players": {
+    "title": "Pemain",
+    "add_placeholder": "Nama pemain",
+    "add_button": "Tambah",
+    "max_players_label": "Maks pemain",
+    "court_count_label": "Gelanggang",
+    "copy_button": "Salin dari sesi sebelumnya",
+    "copy_sheet_title": "Salin pemain dari...",
+    "generate_button": "Jana Jadual ({{ count }} pemain · {{ courts }} gelanggang)",
+    "need_more": "Tambah {{ needed }} lagi pemain untuk jana jadual",
+    "empty_state": "Tambah pemain untuk bermula.",
+    "max_reached_snack": "Had pemain dicapai ({{ max }}). Tingkatkan had untuk menambah lebih ramai.",
+    "roster_locked_snack": "Senarai dikunci. Jana semula jadual dahulu."
+  },
+  "schedule": {
+    "title": "Jadual",
+    "empty_state": "Tambah pemain di tab Pemain dan jana jadual.",
+    "round": "Pusingan {{ number }}",
+    "sitting_out": "Berehat: {{ names }}",
+    "regenerate_button": "Jana Semula Jadual",
+    "regenerate_confirm_title": "Jana Semula Jadual?",
+    "regenerate_confirm_message": "Semua pusingan dan markah akan dipadam. Senarai pemain akan dikekalkan.",
+    "regenerate_action": "Jana Semula"
+  },
+  "scores": {
+    "title": "Markah",
+    "empty_state": "Jana jadual dahulu."
+  },
+  "leaderboard": {
+    "title": "Papan Pendahulu",
+    "share_button": "Kongsi QR",
+    "sort_wins": "Menang",
+    "sort_points": "Mata",
+    "empty_state": "Tiada markah direkodkan lagi.",
+    "stat_line": "{{ wins }} menang · {{ points }} mata · {{ games }} perlawanan",
+    "reset_button": "Set Semula Sesi",
+    "reset_confirm_title": "Set Semula Sesi?",
+    "reset_confirm_message": "Semua pemain, pusingan dan markah akan dipadam.",
+    "reset_action": "Set Semula"
+  },
+  "session_drawer": {
+    "title": "Tukar Sesi",
+    "new_session": "+ Sesi Baru",
+    "delete_confirm_title": "Padam Sesi {{ number }}?",
+    "delete_confirm_message": "Semua pemain, pusingan dan markah akan dipadam secara kekal.",
+    "delete_action": "Padam",
+    "empty_state": "Tiada sesi untuk tarikh ini"
+  },
+  "about": {
+    "title": "Tentang",
+    "version": "v{{ version }}",
+    "built_by": "Dibina oleh Fuji Nguyen",
+    "github": "Lihat di GitHub",
+    "language_label": "Bahasa",
+    "language": "Bahasa"
+  },
+  "common": {
+    "cancel": "Batal",
+    "active": "aktif"
+  }
+}

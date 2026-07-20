@@ -1,0 +1,65 @@
+{
+  "toolbar": {
+    "session_chip": "{{ date }} | {{ number }}"
+  },
+  "players": {
+    "title": "Spieler",
+    "add_placeholder": "Spielername",
+    "add_button": "Hinzufügen",
+    "max_players_label": "Max. Spieler",
+    "court_count_label": "Plätze",
+    "copy_button": "Aus vorheriger Sitzung kopieren",
+    "copy_sheet_title": "Spieler kopieren von...",
+    "generate_button": "Spielplan erstellen ({{ count }} Spieler · {{ courts }} Plätze)",
+    "need_more": "Füge {{ needed }} weitere Spieler hinzu, um den Spielplan zu erstellen",
+    "empty_state": "Spieler hinzufügen, um zu starten.",
+    "max_reached_snack": "Maximale Spieleranzahl erreicht ({{ max }}). Erhöhe das Maximum, um weitere hinzuzufügen.",
+    "roster_locked_snack": "Die Liste ist gesperrt. Bitte zuerst den Spielplan neu erstellen."
+  },
+  "schedule": {
+    "title": "Spielplan",
+    "empty_state": "Spieler im Tab Spieler hinzufügen und Spielplan erstellen.",
+    "round": "Runde {{ number }}",
+    "sitting_out": "Pause: {{ names }}",
+    "regenerate_button": "Spielplan neu erstellen",
+    "regenerate_confirm_title": "Spielplan neu erstellen?",
+    "regenerate_confirm_message": "Alle Runden und Punkte werden gelöscht. Die Spielerliste bleibt erhalten.",
+    "regenerate_action": "Neu erstellen"
+  },
+  "scores": {
+    "title": "Punkte",
+    "empty_state": "Bitte zuerst einen Spielplan erstellen."
+  },
+  "leaderboard": {
+    "title": "Rangliste",
+    "share_button": "QR teilen",
+    "sort_wins": "Siege",
+    "sort_points": "Punkte",
+    "empty_state": "Noch keine Punkte erfasst.",
+    "stat_line": "{{ wins }} Siege · {{ points }} Pkt · {{ games }} Spiele",
+    "reset_button": "Sitzung zurücksetzen",
+    "reset_confirm_title": "Sitzung zurücksetzen?",
+    "reset_confirm_message": "Alle Spieler, Runden und Punkte werden gelöscht.",
+    "reset_action": "Zurücksetzen"
+  },
+  "session_drawer": {
+    "title": "Sitzung wechseln",
+    "new_session": "+ Neue Sitzung",
+    "delete_confirm_title": "Sitzung {{ number }} löschen?",
+    "delete_confirm_message": "Alle Spieler, Runden und Punkte werden dauerhaft gelöscht.",
+    "delete_action": "Löschen",
+    "empty_state": "Keine Sitzungen für dieses Datum"
+  },
+  "about": {
+    "title": "Über",
+    "version": "v{{ version }}",
+    "built_by": "Entwickelt von Fuji Nguyen",
+    "github": "Auf GitHub ansehen",
+    "language_label": "Sprache",
+    "language": "Sprache"
+  },
+  "common": {
+    "cancel": "Abbrechen",
+    "active": "aktiv"
+  }
+}
