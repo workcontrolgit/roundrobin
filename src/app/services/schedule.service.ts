@@ -3,14 +3,16 @@ import { Player, Round, CourtGame } from '../models/session.models';
 
 @Injectable({ providedIn: 'root' })
 export class ScheduleService {
-
-  generateRounds(players: Player[]): Round[] {
+  generateRounds(players: Player[], courtCount: number): Round[] {
     if (players.length < 8) return [];
     const n = players.length;
-    const sitOutsPerRound = n - 8;
+    const normalizedCourtCount = Math.max(1, Math.floor(courtCount));
+    if (n < normalizedCourtCount * 4) return [];
+    const activePlayersPerRound = normalizedCourtCount * 4;
+    const sitOutsPerRound = n - activePlayersPerRound;
     // Target: enough rounds that every player has rotated through sit-outs
     // and played with varied partners. Min 7 rounds.
-    const numRounds = Math.max(7, n <= 8 ? 7 : n <= 9 ? 9 : n <= 10 ? 10 : 11);
+    const numRounds = sitOutsPerRound > 0 ? Math.max(7, n) : 7;
 
     const sitOutCount = new Array(n).fill(0);
     const pairCount: Record<string, number> = {};
@@ -36,31 +38,25 @@ export class ScheduleService {
         ...playingIndices.slice(0, offset),
       ];
 
-      const court1Group = rotated.slice(0, 4);
-      const court2Group = rotated.slice(4, 8);
+      const courts: CourtGame[] = [];
 
-      const [c1t1, c1t2] = this.bestTeamSplit(court1Group, players, pairCount);
-      const [c2t1, c2t2] = this.bestTeamSplit(court2Group, players, pairCount);
+      for (let courtIndex = 0; courtIndex < normalizedCourtCount; courtIndex++) {
+        const group = rotated.slice(courtIndex * 4, courtIndex * 4 + 4);
+        const [team1, team2] = this.bestTeamSplit(group, players, pairCount);
 
-      this.recordPair(players[c1t1[0]].id, players[c1t1[1]].id, pairCount);
-      this.recordPair(players[c1t2[0]].id, players[c1t2[1]].id, pairCount);
-      this.recordPair(players[c2t1[0]].id, players[c2t1[1]].id, pairCount);
-      this.recordPair(players[c2t2[0]].id, players[c2t2[1]].id, pairCount);
+        this.recordPair(players[team1[0]].id, players[team1[1]].id, pairCount);
+        this.recordPair(players[team2[0]].id, players[team2[1]].id, pairCount);
+
+        courts.push({
+          courtName: `Court ${courtIndex + 1}`,
+          team1: [players[team1[0]].id, players[team1[1]].id],
+          team2: [players[team2[0]].id, players[team2[1]].id],
+        });
+      }
 
       rounds.push({
         roundNumber: r + 1,
-        courts: [
-          {
-            courtName: 'Court 1',
-            team1: [players[c1t1[0]].id, players[c1t1[1]].id],
-            team2: [players[c1t2[0]].id, players[c1t2[1]].id],
-          },
-          {
-            courtName: 'Court 2',
-            team1: [players[c2t1[0]].id, players[c2t1[1]].id],
-            team2: [players[c2t2[0]].id, players[c2t2[1]].id],
-          },
-        ],
+        courts,
         sittingOut: sittingOutIndices.map(i => players[i].id),
       });
     }

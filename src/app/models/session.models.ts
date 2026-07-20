@@ -12,14 +12,16 @@ export interface CourtGame {
 
 export interface Round {
   roundNumber: number;
-  courts: CourtGame[];   // always 2 in V1
+  courts: CourtGame[];
   sittingOut: string[];  // player ids
 }
 
 export interface Session {
   date: string;          // YYYY-MM-DD
   sessionNumber: number; // 1, 2, 3… auto-assigned per day
-  players: Player[];     // 8–11 players
+  players: Player[];
+  maxPlayers?: number;   // defaults to 11
+  courtCount?: number;   // defaults to 2
   rounds: Round[];
 }
 

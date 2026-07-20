@@ -16,7 +16,7 @@ test.describe('Schedule Tab', () => {
 
     // Message displayed
     await expect(
-      page.getByText('Add 8–11 players on the Players tab and generate a schedule.')
+      page.getByText('Add players on the Players tab and generate a schedule.')
     ).toBeVisible();
 
     // No round cards displayed

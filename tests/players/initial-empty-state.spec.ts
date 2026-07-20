@@ -31,6 +31,6 @@ test.describe('Players Tab', () => {
     await expect(page.getByRole('button', { name: /Generate Schedule/ })).not.toBeVisible();
 
     // Placeholder message is displayed
-    await expect(page.getByText('Add 8–11 players to get started.')).toBeVisible();
+    await expect(page.getByText('Add players to get started.')).toBeVisible();
   });
 });
