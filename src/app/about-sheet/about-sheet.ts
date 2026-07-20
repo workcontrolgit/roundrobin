@@ -24,6 +24,9 @@ export class AboutSheet {
     { code: 'vi', label: 'Tiếng Việt' },
     { code: 'zh', label: '中文' },
     { code: 'ja', label: '日本語' },
+    { code: 'ms', label: 'Bahasa Melayu' },
+    { code: 'de', label: 'Deutsch' },
+    { code: 'fil', label: 'Filipino' },
   ];
 
   get selectedLang(): string {

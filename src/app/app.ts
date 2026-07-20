@@ -5,6 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { TranslateModule } from '@ngx-translate/core';
 import { SessionService } from './services/session.service';
 import { LanguageService } from './services/language.service';
 import { PlayersTab } from './players-tab/players-tab';
@@ -20,6 +21,7 @@ import { AboutSheet } from './about-sheet/about-sheet';
   imports: [
     CommonModule,
     MatTabsModule, MatToolbarModule, MatButtonModule, MatIconModule, MatBottomSheetModule,
+    TranslateModule,
     PlayersTab, ScheduleTab, ScoresTab, LeaderboardTab,
   ],
   templateUrl: './app.html',
