@@ -10,7 +10,7 @@ class FakeTranslateLoader implements TranslateLoader {
     return of({
       schedule: {
         title: 'Schedule',
-        empty_state: 'Add 8–11 players on the Players tab and generate a schedule.',
+        empty_state: 'Add players on the Players tab and generate a schedule.',
         round: 'Round {{ number }}',
         sitting_out: 'Sitting out: {{ names }}',
         regenerate_button: 'Regenerate Schedule',

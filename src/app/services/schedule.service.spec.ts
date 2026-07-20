@@ -23,22 +23,27 @@ describe('ScheduleService', () => {
 
   describe('generateRounds()', () => {
     it('generates at least 7 rounds for 8 players', () => {
-      const rounds = service.generateRounds(makePlayers(8));
+      const rounds = service.generateRounds(makePlayers(8), 2);
       expect(rounds.length).toBeGreaterThanOrEqual(7);
     });
 
     it('generates rounds for 11 players', () => {
-      const rounds = service.generateRounds(makePlayers(11));
+      const rounds = service.generateRounds(makePlayers(11), 2);
       expect(rounds.length).toBeGreaterThanOrEqual(7);
     });
 
     it('every round has exactly 2 courts', () => {
-      const rounds = service.generateRounds(makePlayers(8));
+      const rounds = service.generateRounds(makePlayers(8), 2);
       rounds.forEach(r => expect(r.courts.length).toBe(2));
     });
 
+    it('respects configured court count', () => {
+      const rounds = service.generateRounds(makePlayers(12), 3);
+      rounds.forEach(r => expect(r.courts.length).toBe(3));
+    });
+
     it('every court has exactly 4 unique players per round', () => {
-      const rounds = service.generateRounds(makePlayers(8));
+      const rounds = service.generateRounds(makePlayers(8), 2);
       rounds.forEach(round => {
         round.courts.forEach(court => {
           const ids = [...court.team1, ...court.team2];
@@ -49,7 +54,7 @@ describe('ScheduleService', () => {
     });
 
     it('no player appears twice in the same round', () => {
-      const rounds = service.generateRounds(makePlayers(9));
+      const rounds = service.generateRounds(makePlayers(9), 2);
       rounds.forEach(round => {
         const allPlaying = round.courts.flatMap(c => [...c.team1, ...c.team2]);
         expect(new Set(allPlaying).size).toBe(allPlaying.length);
@@ -57,23 +62,28 @@ describe('ScheduleService', () => {
     });
 
     it('with 8 players, no one sits out', () => {
-      const rounds = service.generateRounds(makePlayers(8));
+      const rounds = service.generateRounds(makePlayers(8), 2);
       rounds.forEach(r => expect(r.sittingOut.length).toBe(0));
     });
 
     it('with 9 players, exactly 1 sits out per round', () => {
-      const rounds = service.generateRounds(makePlayers(9));
+      const rounds = service.generateRounds(makePlayers(9), 2);
       rounds.forEach(r => expect(r.sittingOut.length).toBe(1));
     });
 
     it('with 11 players, exactly 3 sit out per round', () => {
-      const rounds = service.generateRounds(makePlayers(11));
+      const rounds = service.generateRounds(makePlayers(11), 2);
       rounds.forEach(r => expect(r.sittingOut.length).toBe(3));
+    });
+
+    it('returns empty rounds when players are insufficient for configured courts', () => {
+      const rounds = service.generateRounds(makePlayers(11), 3);
+      expect(rounds).toEqual([]);
     });
 
     it('sit-outs are distributed fairly across all players', () => {
       const players = makePlayers(9);
-      const rounds = service.generateRounds(players);
+      const rounds = service.generateRounds(players, 2);
       const sitOutCounts: Record<string, number> = {};
       players.forEach(p => (sitOutCounts[p.id] = 0));
       rounds.forEach(r => r.sittingOut.forEach(id => sitOutCounts[id]++));
@@ -84,12 +94,12 @@ describe('ScheduleService', () => {
     });
 
     it('round numbers are sequential starting at 1', () => {
-      const rounds = service.generateRounds(makePlayers(8));
+      const rounds = service.generateRounds(makePlayers(8), 2);
       rounds.forEach((r, i) => expect(r.roundNumber).toBe(i + 1));
     });
 
     it('court names are Court 1 and Court 2', () => {
-      const rounds = service.generateRounds(makePlayers(8));
+      const rounds = service.generateRounds(makePlayers(8), 2);
       rounds.forEach(r => {
         expect(r.courts[0].courtName).toBe('Court 1');
         expect(r.courts[1].courtName).toBe('Court 2');
@@ -98,8 +108,8 @@ describe('ScheduleService', () => {
 
     it('is deterministic — same players produce same schedule', () => {
       const players = makePlayers(10);
-      const r1 = service.generateRounds(players);
-      const r2 = service.generateRounds(players);
+      const r1 = service.generateRounds(players, 2);
+      const r2 = service.generateRounds(players, 2);
       expect(JSON.stringify(r1)).toBe(JSON.stringify(r2));
     });
   });

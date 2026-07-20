@@ -41,8 +41,13 @@ test.describe('Players Tab', () => {
     // 2. Type a 12th name in the input
     await page.getByLabel('Player name').fill('Lara');
 
-    // 3. Add button is disabled even with a name typed
-    await expect(page.getByRole('button', { name: 'Add' })).toBeDisabled();
+    // 3. Add button remains enabled and shows feedback when max is reached
+    await expect(page.getByTestId('add-player-btn')).toBeEnabled();
+    await page.getByTestId('add-player-btn').click();
+    await expect(page.getByText('Max players reached (11). Increase max players to add more.')).toBeVisible();
+
+    // Player count is unchanged
+    await expect(page.getByText('11 / 11')).toBeVisible();
 
     // Generate Schedule button visible
     await expect(page.getByRole('button', { name: /Generate Schedule \(11 players · 2 courts\)/ })).toBeVisible();
@@ -178,5 +183,34 @@ test.describe('Players Tab', () => {
 
     // Counter badge correctly reflects 3 / 11
     await expect(page.getByText('3 / 11')).toBeVisible();
+  });
+
+  test('1.15 — Admin Configures Max Players and Courts', async ({ page }) => {
+    // Precondition: fresh state
+    await freshState(page);
+    await page.getByRole('tab', { name: 'Players' }).click();
+
+    // Configure per-session limits
+    await page.getByRole('spinbutton', { name: 'Max players' }).fill('12');
+    await page.getByRole('spinbutton', { name: 'Courts' }).fill('3');
+
+    // Badge reflects configured max players
+    await expect(page.getByText('0 / 12')).toBeVisible();
+
+    // Add 11 players, generation should still be blocked (needs 12 for 3 courts)
+    await addPlayers(page, ELEVEN_PLAYERS);
+    await expect(page.getByText('11 / 12')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Generate Schedule/ })).not.toBeVisible();
+    await expect(page.getByText('Add 1 more player(s) to generate schedule')).toBeVisible();
+
+    // Add 12th player, generation becomes available with configured courts in label
+    await addPlayer(page, 'Lara');
+    await expect(page.getByText('12 / 12')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Generate Schedule \(12 players · 3 courts\)/ })).toBeVisible();
+
+    // Generate and verify 3 courts render in schedule
+    await page.getByRole('button', { name: /Generate Schedule/ }).click();
+    await page.getByRole('tab', { name: 'Schedule' }).click();
+    await expect(page.getByText('Court 3').first()).toBeVisible();
   });
 });

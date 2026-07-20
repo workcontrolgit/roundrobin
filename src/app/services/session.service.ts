@@ -4,6 +4,8 @@ import { Session, Player, Round, PlayerStats } from '../models/session.models';
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   private readonly PREFIX = 'pickleball-session-';
+  private readonly DEFAULT_MAX_PLAYERS = 11;
+  private readonly DEFAULT_COURT_COUNT = 2;
   private _activeSession = signal<Session | null>(null);
 
   readonly activeSession = this._activeSession.asReadonly();
@@ -13,12 +15,13 @@ export class SessionService {
   }
 
   saveSession(session: Session): void {
-    localStorage.setItem(this.storageKey(session.date, session.sessionNumber), JSON.stringify(session));
+    const normalized = this.withDefaults(session);
+    localStorage.setItem(this.storageKey(normalized.date, normalized.sessionNumber), JSON.stringify(normalized));
   }
 
   loadSession(date: string, sessionNumber: number): Session | null {
     const raw = localStorage.getItem(this.storageKey(date, sessionNumber));
-    return raw ? (JSON.parse(raw) as Session) : null;
+    return raw ? this.withDefaults(JSON.parse(raw) as Session) : null;
   }
 
   getSavedDates(): string[] {
@@ -51,15 +54,24 @@ export class SessionService {
   }
 
   loadSharedSession(session: Session): void {
-    this._activeSession.set(session);
+    this._activeSession.set(this.withDefaults(session));
   }
 
   initSession(date: string, sessionNumber: number): void {
     const existing = this.loadSession(date, sessionNumber);
     if (existing) {
-      this._activeSession.set(existing);
+      const normalized = this.withDefaults(existing);
+      this.saveSession(normalized);
+      this._activeSession.set(normalized);
     } else {
-      const session: Session = { date, sessionNumber, players: [], rounds: [] };
+      const session: Session = {
+        date,
+        sessionNumber,
+        players: [],
+        rounds: [],
+        maxPlayers: this.DEFAULT_MAX_PLAYERS,
+        courtCount: this.DEFAULT_COURT_COUNT,
+      };
       this.saveSession(session);
       this._activeSession.set(session);
     }
@@ -98,7 +110,7 @@ export class SessionService {
     keysToMigrate.forEach(key => {
       const raw = localStorage.getItem(key);
       if (!raw) return;
-      const session = JSON.parse(raw) as Session;
+      const session = this.withDefaults(JSON.parse(raw) as Session);
       session.sessionNumber = 1;
       const newKey = `${key}-1`;
       localStorage.setItem(newKey, JSON.stringify(session));
@@ -124,6 +136,8 @@ export class SessionService {
       const today = this.todayDate();
       this.initSession(today, this.getNextSessionNumber(today));
     }
+    const current = this._activeSession();
+    if (current && current.players.length >= (current.maxPlayers ?? this.DEFAULT_MAX_PLAYERS)) return;
     this.update(s => ({
       ...s,
       players: [...s.players, { id: crypto.randomUUID(), name: name.trim() }],
@@ -148,6 +162,24 @@ export class SessionService {
       const trimmed = name.trim();
       if (trimmed) this.addPlayer(trimmed);
     });
+  }
+
+  setMaxPlayers(value: number): void {
+    const next = Math.max(8, Math.floor(value));
+    if (!this._activeSession()) {
+      const today = this.todayDate();
+      this.initSession(today, this.getNextSessionNumber(today));
+    }
+    this.update(s => ({ ...s, maxPlayers: Math.max(next, s.players.length) }));
+  }
+
+  setCourtCount(value: number): void {
+    const next = Math.max(1, Math.floor(value));
+    if (!this._activeSession()) {
+      const today = this.todayDate();
+      this.initSession(today, this.getNextSessionNumber(today));
+    }
+    this.update(s => ({ ...s, courtCount: next }));
   }
 
   setRounds(rounds: Round[]): void {
@@ -222,9 +254,17 @@ export class SessionService {
         bytes[i] = binary.charCodeAt(i);
       }
       const json = new TextDecoder().decode(bytes);
-      return JSON.parse(json) as Session;
+      return this.withDefaults(JSON.parse(json) as Session);
     } catch {
       return null;
     }
+  }
+
+  private withDefaults(session: Session): Session {
+    return {
+      ...session,
+      maxPlayers: session.maxPlayers ?? this.DEFAULT_MAX_PLAYERS,
+      courtCount: session.courtCount ?? this.DEFAULT_COURT_COUNT,
+    };
   }
 }

@@ -182,7 +182,7 @@ test.describe('Leaderboard Tab', () => {
 
     // Schedule tab shows empty state
     await page.getByRole('tab', { name: 'Schedule' }).click();
-    await expect(page.getByText('Add 8–11 players on the Players tab and generate a schedule.')).toBeVisible();
+    await expect(page.getByText('Add players on the Players tab and generate a schedule.')).toBeVisible();
 
     // Scores tab shows empty state
     await page.getByRole('tab', { name: 'Scores' }).click();
