@@ -38,8 +38,12 @@ export class PlayersTab {
   editName = signal('');
 
   readonly players = computed(() => this.sessionService.activeSession()?.players ?? []);
-  readonly canAdd = computed(() => this.players().length < 11 && this.newName().trim().length > 0);
-  readonly canGenerate = computed(() => this.players().length >= 8);
+  readonly maxPlayers = computed(() => this.sessionService.activeSession()?.maxPlayers ?? 11);
+  readonly courtCount = computed(() => this.sessionService.activeSession()?.courtCount ?? 2);
+  readonly requiredPlayers = computed(() => Math.max(8, this.courtCount() * 4));
+  readonly hasNameToAdd = computed(() => this.newName().trim().length > 0);
+  readonly canAdd = computed(() => this.players().length < this.maxPlayers() && this.hasNameToAdd());
+  readonly canGenerate = computed(() => this.players().length >= this.requiredPlayers());
   readonly scheduleGenerated = computed(() =>
     (this.sessionService.activeSession()?.rounds.length ?? 0) > 0
   );
@@ -64,7 +68,15 @@ export class PlayersTab {
   }
 
   addPlayer(): void {
-    if (!this.canAdd()) return;
+    if (!this.hasNameToAdd()) return;
+    if (!this.canAdd()) {
+      this.snackBar.open(
+        this.translate.instant('players.max_reached_snack', { max: this.maxPlayers() }),
+        'OK',
+        { duration: 3000 }
+      );
+      return;
+    }
     this.sessionService.addPlayer(this.newName());
     this.newName.set('');
     this.cdr.detectChanges();
@@ -103,8 +115,28 @@ export class PlayersTab {
       const ok = confirm('This will clear the existing schedule and all scores. Continue?');
       if (!ok) return;
     }
-    const rounds = this.scheduleService.generateRounds(session.players);
+    const rounds = this.scheduleService.generateRounds(session.players, this.courtCount());
     this.sessionService.setRounds(rounds);
+  }
+
+  updateMaxPlayers(value: string | number | null): void {
+    const parsed = Math.floor(Number(value));
+    if (!Number.isFinite(parsed)) return;
+    this.sessionService.setMaxPlayers(parsed);
+  }
+
+  updateCourtCount(value: string | number | null): void {
+    const parsed = Math.floor(Number(value));
+    if (!Number.isFinite(parsed)) return;
+    this.sessionService.setCourtCount(parsed);
+  }
+
+  stepMaxPlayers(delta: number): void {
+    this.sessionService.setMaxPlayers(this.maxPlayers() + delta);
+  }
+
+  stepCourtCount(delta: number): void {
+    this.sessionService.setCourtCount(this.courtCount() + delta);
   }
 
   onKeydown(event: KeyboardEvent, inputEl?: HTMLInputElement): void {

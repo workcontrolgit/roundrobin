@@ -1,0 +1,65 @@
+{
+  "toolbar": {
+    "session_chip": "{{ date }} | {{ number }}"
+  },
+  "players": {
+    "title": "Mga Manlalaro",
+    "add_placeholder": "Pangalan ng manlalaro",
+    "add_button": "Idagdag",
+    "max_players_label": "Maks na manlalaro",
+    "court_count_label": "Mga korte",
+    "copy_button": "Kopyahin mula sa nakaraang sesyon",
+    "copy_sheet_title": "Kopyahin ang mga manlalaro mula sa...",
+    "generate_button": "Gumawa ng Iskedyul ({{ count }} manlalaro · {{ courts }} korte)",
+    "need_more": "Magdagdag ng {{ needed }} pang manlalaro para gumawa ng iskedyul",
+    "empty_state": "Magdagdag ng mga manlalaro para magsimula.",
+    "max_reached_snack": "Naabot na ang maksimum na bilang ng manlalaro ({{ max }}). Taasan ang limitasyon para magdagdag pa.",
+    "roster_locked_snack": "Nakalock na ang listahan. Gumawa muli ng iskedyul muna."
+  },
+  "schedule": {
+    "title": "Iskedyul",
+    "empty_state": "Magdagdag ng mga manlalaro sa tab na Mga Manlalaro at gumawa ng iskedyul.",
+    "round": "Raund {{ number }}",
+    "sitting_out": "Nagpapahinga: {{ names }}",
+    "regenerate_button": "Gumawa Muli ng Iskedyul",
+    "regenerate_confirm_title": "Gumawa Muli ng Iskedyul?",
+    "regenerate_confirm_message": "Lahat ng raund at puntos ay mabubura. Mananatili ang listahan ng mga manlalaro.",
+    "regenerate_action": "Gumawa Muli"
+  },
+  "scores": {
+    "title": "Mga Puntos",
+    "empty_state": "Gumawa muna ng iskedyul."
+  },
+  "leaderboard": {
+    "title": "Talaan ng Pinakamahusay",
+    "share_button": "Ibahagi ang QR",
+    "sort_wins": "Panalo",
+    "sort_points": "Puntos",
+    "empty_state": "Wala pang naitalagang puntos.",
+    "stat_line": "{{ wins }} panalo · {{ points }} puntos · {{ games }} laro",
+    "reset_button": "I-reset ang Sesyon",
+    "reset_confirm_title": "I-reset ang Sesyon?",
+    "reset_confirm_message": "Lahat ng manlalaro, raund, at puntos ay mabubura.",
+    "reset_action": "I-reset"
+  },
+  "session_drawer": {
+    "title": "Palitan ang Sesyon",
+    "new_session": "+ Bagong Sesyon",
+    "delete_confirm_title": "Burahin ang Sesyon {{ number }}?",
+    "delete_confirm_message": "Lahat ng manlalaro, raund, at puntos ay permanenteng mabubura.",
+    "delete_action": "Burahin",
+    "empty_state": "Walang sesyon para sa petsang ito"
+  },
+  "about": {
+    "title": "Tungkol Sa",
+    "version": "v{{ version }}",
+    "built_by": "Ginawa ni Fuji Nguyen",
+    "github": "Tingnan sa GitHub",
+    "language_label": "Wika",
+    "language": "Wika"
+  },
+  "common": {
+    "cancel": "Kanselahin",
+    "active": "aktibo"
+  }
+}

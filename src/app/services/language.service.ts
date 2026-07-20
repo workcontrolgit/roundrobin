@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class LanguageService {
   private readonly translate = inject(TranslateService);
   private readonly STORAGE_KEY = 'pickleball-lang';
-  private readonly SUPPORTED = ['en', 'vi', 'zh', 'ja'];
+  private readonly SUPPORTED = ['en', 'vi', 'zh', 'ja', 'ms', 'de', 'fil'];
   private readonly DEFAULT = 'en';
 
   init(): void {

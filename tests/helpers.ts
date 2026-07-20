@@ -35,7 +35,7 @@ export async function goToLeaderboard(page: Page): Promise<void> {
 /** Add a single player by name */
 export async function addPlayer(page: Page, name: string): Promise<void> {
   await page.getByLabel('Player name').fill(name);
-  await page.getByRole('button', { name: 'Add' }).click();
+  await page.getByTestId('add-player-btn').click();
 }
 
 /** Add multiple players */
